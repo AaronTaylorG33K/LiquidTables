@@ -3,5 +3,6 @@
 3. RUN `make start` to bring the stack up on k8s
 
 
-Access FASTAPI @ http://localhost:8000/docs#/
-Access LiquidTables UI @ http://localhost/
+- Access FASTAPI @ http://localhost:8000/docs#/
+  
+- Access LiquidTables UI @ http://localhost/
