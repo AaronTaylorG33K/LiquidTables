@@ -24,7 +24,7 @@ To get started with FastTables, follow the steps below:
 
 
 
-## Wheres it at?
+## Where\'s it at?
 - Access FASTAPI @ http://localhost:8000/docs#/  
 - Access LiquidTables UI @ http://localhost/
 
