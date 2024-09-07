@@ -1,0 +1,45 @@
+# Service for DuckDB
+apiVersion: v1
+kind: Service
+metadata:
+  name: duckdb
+  namespace: default
+spec:
+  selector:
+    app: duckdb
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+  type: ClusterIP
+
+---
+# Service for FastAPI
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 8000
+  selector:
+    app: fastapi
+
+---
+# Service for Svelte
+apiVersion: v1
+kind: Service
+metadata:
+  name: svelte
+  labels:
+    app: svelte
+spec:
+  type: LoadBalancer
+  selector:
+    app: svelte
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

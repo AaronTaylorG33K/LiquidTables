@@ -1,0 +1,174 @@
+# Define variables for the Docker image names and tags
+IMAGE_NAME_FASTAPI = fastapi
+IMAGE_NAME_SVELTE = svelte
+IMAGE_NAME_DUCKDB = duckdb
+TAG = latest
+REGISTRY = localhost:5001
+
+# Define paths to Dockerfiles
+FASTAPI_DOCKERFILE = fastapi/Dockerfile
+SVELTE_DOCKERFILE = svelte/Dockerfile
+DUCKDB_DOCKERFILE = duckdb/Dockerfile
+
+# Define path to Kubernetes deployments and services files
+DEPLOYMENTS_FILE = deployments.yaml
+SERVICES_FILE = services.yaml
+
+# Define port forwarding ports
+PORT_FASTAPI = 8000
+PORT_SVELTE = 3000
+PORT_DUCKDB = 5432
+
+# Define paths to SQL files
+SCHEMA_FILE = schema.sql
+SEED_FILE = seed.sql
+
+# Define path to local DuckDB container
+DUCKDB_CONTAINER_NAME = duckdb-container
+DUCKDB_PATH=/usr/local/bin/duckdb
+# Build all images
+all: build-fastapi build-svelte build-duckdb
+
+# Ensure local Docker registry is running
+ensure-registry:
+	@if [ -z "$$(docker ps -q -f name=registry)" ]; then \
+		echo "Starting local Docker registry..."; \
+		docker run -d -p 5001:5000 --name registry registry:2; \
+	fi
+
+# Build the FastAPI Docker image
+build-fastapi:
+	@echo "Building FastAPI Docker image..."
+	docker build -t $(IMAGE_NAME_FASTAPI):$(TAG) -f $(FASTAPI_DOCKERFILE) fastapi
+
+# Build the Svelte Docker image
+build-svelte:
+	@echo "Building Svelte Docker image..."
+	docker build -t $(IMAGE_NAME_SVELTE):$(TAG) -f $(SVELTE_DOCKERFILE) svelte
+
+# Build the DuckDB Docker image
+build-duckdb:
+	@echo "Building DuckDB Docker image..."
+	docker build -t $(IMAGE_NAME_DUCKDB):$(TAG) -f $(DUCKDB_DOCKERFILE) duckdb
+
+# Tag and push all Docker images
+push: ensure-registry
+	@echo "Waiting for registry to be fully up..."
+	@echo "Tagging and pushing Docker images..."
+	docker tag $(IMAGE_NAME_FASTAPI):$(TAG) $(REGISTRY)/$(IMAGE_NAME_FASTAPI):$(TAG)
+	docker tag $(IMAGE_NAME_SVELTE):$(TAG) $(REGISTRY)/$(IMAGE_NAME_SVELTE):$(TAG)
+	docker tag $(IMAGE_NAME_DUCKDB):$(TAG) $(REGISTRY)/$(IMAGE_NAME_DUCKDB):$(TAG)
+	docker push $(REGISTRY)/$(IMAGE_NAME_FASTAPI):$(TAG)
+	docker push $(REGISTRY)/$(IMAGE_NAME_SVELTE):$(TAG)
+	docker push $(REGISTRY)/$(IMAGE_NAME_DUCKDB):$(TAG)
+
+# Deploy to Kubernetes
+deploy:
+	@echo "Applying Kubernetes deployments..."
+	kubectl apply -f $(DEPLOYMENTS_FILE)
+	@echo "Applying Kubernetes services..."
+	kubectl apply -f $(SERVICES_FILE)
+	@echo "Waiting for pods to be ready..."
+	kubectl wait --for=condition=available --timeout=60s deployment/fastapi
+	kubectl wait --for=condition=available --timeout=60s deployment/svelte
+	kubectl wait --for=condition=available --timeout=60s deployment/duckdb
+
+# Port forward all services
+port-forward:
+	@echo "Port forwarding FastAPI..."
+	kubectl port-forward service/fastapi $(PORT_FASTAPI):80 &
+	@echo "Port forwarding DuckDB..."
+	kubectl port-forward service/duckdb $(PORT_DUCKDB):$(PORT_DUCKDB) &
+	@echo "Port forwarding Svelte..."
+	kubectl port-forward service/svelte $(PORT_SVELTE):80 &
+
+# Tail logs for all pods
+tail-logs:
+	@echo "Tailing logs for FastAPI pods..."
+	kubectl logs -f -l app=fastapi
+	@echo "Tailing logs for DuckDB pods..."
+	kubectl logs -f -l app=duckdb
+	@echo "Tailing logs for Svelte pods..."
+	kubectl logs -f -l app=svelte
+
+# Scale down all deployments and delete all pods
+stop:
+	@echo "Scaling down deployments..."
+	kubectl scale deployment fastapi --replicas=0
+	kubectl scale deployment svelte --replicas=0
+	kubectl scale deployment duckdb --replicas=0
+	@echo "Stopping port forwarding..."
+	pkill -f "kubectl port-forward"
+	@echo "Stack stopped."
+
+# Clean up Kubernetes pods
+clean-pods:
+	@echo "Deleting all pods..."
+	kubectl delete pods --all
+
+# Clean up local Docker images
+clean-images:
+	@echo "Removing local Docker images..."
+	docker rmi $(IMAGE_NAME_FASTAPI):$(TAG) $(IMAGE_NAME_SVELTE):$(TAG) $(IMAGE_NAME_DUCKDB):$(TAG)
+
+# Command to start the entire stack
+start: push deploy port-forward tail-logs
+	@echo "Stack started."
+
+# Command to stop and clean the stack
+clean:
+	@echo "Cleaning up stack..."
+	$(MAKE) stop
+	$(MAKE) clean-pods
+	$(MAKE) clean-images
+
+# Run schema SQL script inside DuckDB container
+run-schema:
+	@echo "Running schema SQL script inside DuckDB container..."
+	POD_NAME=$$(kubectl get pods -l app=duckdb -o jsonpath='{.items[0].metadata.name}'); \
+	echo "Pod Name: $$POD_NAME"; \
+	if [ -f $(SCHEMA_FILE) ]; then \
+		kubectl exec -it $$POD_NAME -- sh -c "mkdir -p /scripts"; \
+		kubectl cp $(SCHEMA_FILE) $$POD_NAME:/scripts/$(SCHEMA_FILE); \
+		kubectl exec -it $$POD_NAME -- sh -c "/duckdb /var/lib/duckdb/mydatabase.db < /scripts/$(SCHEMA_FILE)"; \
+	else \
+		echo "$(SCHEMA_FILE) not found in the local filesystem."; \
+		exit 1; \
+	fi
+
+# Run seed data SQL script inside DuckDB container
+run-seed:
+	@echo "Running seed data SQL script inside DuckDB container..."
+	POD_NAME=$$(kubectl get pods -l app=duckdb -o jsonpath='{.items[0].metadata.name}'); \
+	echo "Pod Name: $$POD_NAME"; \
+	if [ -f $(SEED_FILE) ]; then \
+		kubectl exec -it $$POD_NAME -- sh -c "mkdir -p /scripts"; \
+		kubectl cp $(SEED_FILE) $$POD_NAME:/scripts/$(SEED_FILE); \
+		kubectl exec -it $$POD_NAME -- sh -c "/duckdb /var/lib/duckdb/mydatabase.db < /scripts/$(SEED_FILE)"; \
+	else \
+		echo "$(SEED_FILE) not found in the local filesystem."; \
+		exit 1; \
+	fi
+# Initialize the database
+init-db: run-schema run-seed
+
+# Display help
+help:
+	@echo "Makefile commands:"
+	@echo "  make all            - Build all Docker images"
+	@echo "  make build-fastapi  - Build FastAPI Docker image"
+	@echo "  make build-svelte   - Build Svelte Docker image"
+	@echo "  make build-duckdb   - Build DuckDB Docker image"
+	@echo "  make push           - Tag and push Docker images to local registry"
+	@echo "  make deploy         - Deploy Kubernetes services and deployments"
+	@echo "  make port-forward   - Set up port forwarding for services"
+	@echo "  make run-schema     - Run schema SQL script inside DuckDB container"
+	@echo "  make run-seed       - Run seed data SQL script inside DuckDB container"
+	@echo "  make tail-logs      - Tail logs for all pods"
+	@echo "  make stop           - Scale down deployments and stop port forwarding"
+	@echo "  make clean-pods     - Delete all Kubernetes pods"
+	@echo "  make clean-images   - Remove local Docker images"
+	@echo "  make clean          - Stop stack, clean pods, and remove Docker images"
+	@echo "  make start          - Build images, deploy services, and start stack"
+	@echo "  make init-db        - Initialize database by running SQL scripts"
+	@echo "  make help           - Display this help message"

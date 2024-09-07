@@ -1,0 +1,102 @@
+# PersistentVolumeClaim for DuckDB
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: duckdb-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+# Deployment for DuckDB
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: duckdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: duckdb
+  template:
+    metadata:
+      labels:
+        app: duckdb
+    spec:
+      containers:
+      - name: duckdb
+        image: localhost:5001/duckdb:latest
+        command: ["sh", "-c", "./duckdb /var/lib/duckdb/mydatabase.db; tail -f /dev/null"]
+        ports:
+        - containerPort: 5432
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        volumeMounts:
+        - name: duckdb-storage
+          mountPath: /var/lib/duckdb
+      restartPolicy: Always
+      volumes:
+      - name: duckdb-storage
+        persistentVolumeClaim:
+          claimName: duckdb-pvc
+
+---
+# Deployment for FastAPI
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fastapi
+  template:
+    metadata:
+      labels:
+        app: fastapi
+    spec:
+      containers:
+      - name: fastapi
+        image: localhost:5001/fastapi:latest
+        ports:
+        - containerPort: 8000
+
+---
+# Deployment for Svelte
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: svelte
+  labels:
+    app: svelte
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: svelte
+  template:
+    metadata:
+      labels:
+        app: svelte
+    spec:
+      containers:
+      - name: svelte
+        image: localhost:5001/svelte:latest
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "500m"
+          limits:
+            memory: "512Mi"
+            cpu: "1000m"
