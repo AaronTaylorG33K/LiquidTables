@@ -1,8 +1,8 @@
-# FastTables
+# LiquidTables
 
-FastTables is a project that combines FastAPI, Svelte, and DuckDB for fast and efficient data handling.
+LiquidTables is a project that combines FastAPI, Svelte, and DuckDB for fast and efficient data handling.
 
-## How to Use FastTables
+## How to Use LiquidTables
 
 To get started with FastTables, follow the steps below:
 
