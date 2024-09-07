@@ -20,14 +20,14 @@ PORT_SVELTE = 3000
 PORT_DUCKDB = 5432
 
 # Define paths to SQL files
-SCHEMA_FILE = schema.sql
-SEED_FILE = seed.sql
+SCHEMA_FILE := ./duckdb/scripts/schema.sql
+SEED_FILE := ./duckdb/scripts/seed.sql
 
 # Define path to local DuckDB container
 DUCKDB_CONTAINER_NAME = duckdb-container
 DUCKDB_PATH=/usr/local/bin/duckdb
 # Build all images
-all: build-fastapi build-svelte build-duckdb
+build: build-fastapi build-svelte build-duckdb
 
 # Ensure local Docker registry is running
 ensure-registry:
@@ -112,8 +112,17 @@ clean-images:
 	docker rmi $(IMAGE_NAME_FASTAPI):$(TAG) $(IMAGE_NAME_SVELTE):$(TAG) $(IMAGE_NAME_DUCKDB):$(TAG)
 
 # Command to start the entire stack
-start: push deploy port-forward tail-logs
-	@echo "Stack started."
+start: push deploy port-forward
+	@echo "Opening http://localhost in the browser..."
+	open http://localhost
+	@echo "
+	@echo "\033[0;34m"
+	@echo "   __    ____ ____   __  __ ____ ___       "
+	@echo "  / /   /  _// __ \ / / / //  _// _ \      "
+	@echo " / /__ _/ / / /_/ // /_/ /_/ / / // /      "
+	@echo "/____//___/ \___\_\\____//___//____/       "
+	@echo "\033[0;32m🔥 Stack started.\033[0m"
+	@echo "\033[0m"
 
 # Command to stop and clean the stack
 clean:
@@ -125,16 +134,20 @@ clean:
 # Run schema SQL script inside DuckDB container
 run-schema:
 	@echo "Running schema SQL script inside DuckDB container..."
+	@echo "Current working directory: $(shell pwd)"
+	@echo "Checking for schema.sql file at $(SCHEMA_FILE)"
+	@ls -l $(SCHEMA_FILE)
 	POD_NAME=$$(kubectl get pods -l app=duckdb -o jsonpath='{.items[0].metadata.name}'); \
 	echo "Pod Name: $$POD_NAME"; \
 	if [ -f $(SCHEMA_FILE) ]; then \
-		kubectl exec -it $$POD_NAME -- sh -c "mkdir -p /scripts"; \
-		kubectl cp $(SCHEMA_FILE) $$POD_NAME:/scripts/$(SCHEMA_FILE); \
-		kubectl exec -it $$POD_NAME -- sh -c "/duckdb /var/lib/duckdb/mydatabase.db < /scripts/$(SCHEMA_FILE)"; \
+		kubectl exec -it $$POD_NAME -- sh -c "cat /scripts/schema.sql"; \
+		kubectl exec -it $$POD_NAME -- sh -c "/duckdb /var/lib/duckdb/mydatabase.db < /scripts/$(notdir $(SCHEMA_FILE))"; \
+		echo -e "\n\033[0;32m🔥 Schema loaded!\033[0m"; \
 	else \
 		echo "$(SCHEMA_FILE) not found in the local filesystem."; \
 		exit 1; \
 	fi
+
 
 # Run seed data SQL script inside DuckDB container
 run-seed:
@@ -143,8 +156,9 @@ run-seed:
 	echo "Pod Name: $$POD_NAME"; \
 	if [ -f $(SEED_FILE) ]; then \
 		kubectl exec -it $$POD_NAME -- sh -c "mkdir -p /scripts"; \
-		kubectl cp $(SEED_FILE) $$POD_NAME:/scripts/$(SEED_FILE); \
-		kubectl exec -it $$POD_NAME -- sh -c "/duckdb /var/lib/duckdb/mydatabase.db < /scripts/$(SEED_FILE)"; \
+		kubectl cp $(SEED_FILE) $$POD_NAME:/scripts/$(notdir $(SEED_FILE)); \
+		kubectl exec -it $$POD_NAME -- sh -c "/duckdb /var/lib/duckdb/mydatabase.db < /scripts/$(notdir $(SEED_FILE))"; \
+		echo -e "\n\033[0;32m🔥 Database Seeded!\033[0m"; \
 	else \
 		echo "$(SEED_FILE) not found in the local filesystem."; \
 		exit 1; \
@@ -152,10 +166,11 @@ run-seed:
 # Initialize the database
 init-db: run-schema run-seed
 
+
 # Display help
 help:
 	@echo "Makefile commands:"
-	@echo "  make all            - Build all Docker images"
+	@echo "  make build            - Build all Docker images"
 	@echo "  make build-fastapi  - Build FastAPI Docker image"
 	@echo "  make build-svelte   - Build Svelte Docker image"
 	@echo "  make build-duckdb   - Build DuckDB Docker image"

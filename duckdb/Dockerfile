@@ -23,5 +23,8 @@ RUN apt-get update \
 # Create the directory for the database
 RUN mkdir -p /var/lib/duckdb /scripts
 
-# Set the DuckDB CLI as the entrypoint
-ENTRYPOINT ["/usr/local/bin/duckdb"]
+# Copy the scripts folder into the container
+COPY ./scripts /scripts
+
+# Set the DuckDB CLI as the entrypoint with the database file
+ENTRYPOINT ["/duckdb", "/var/lib/duckdb/mydatabase.db"]
