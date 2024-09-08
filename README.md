@@ -6,21 +6,22 @@ LiquidTables is a project that combines FastAPI, Svelte, and DuckDB for fast and
 
 To get started with FastTables, follow the steps below:
 
-1. **Build the Docker images:**
+**First run?:**
+    ```bash
+    make init
+    ```
+
+
+
+**Build the Docker images:**
    ```bash
    make build
    ```
-2. **Init the db schemas and seed them with sample data:**
-   ```bash
-   make init-db
-   ```
-
-3. **Bring up the stack:**
+**Bring up the stack:**
    ```bash
    make start
    ```
-
-4. **Bring the stack down:**
+**Bring the stack down:**
    ```bash
    make kill
    ```
