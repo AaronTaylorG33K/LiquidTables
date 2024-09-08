@@ -11,28 +11,6 @@ To get started with FastTables, follow the steps below:
    make init
    ```
 
-Basic Commands
-- **Build the Docker images:**
-   ```bash
-   make build
-   ```
-- **Bring up the stack:**
-   ```bash
-   make start
-   ```
-- **Bring the stack down:**
-   ```bash
-   make kill
-   ```
-
-
-
-## Where\'s it at?
-- Access FASTAPI @ http://localhost:8000/docs#/  
-- Access LiquidTables UI @ http://localhost/
-
-
-
 
 ## All Commands
 
