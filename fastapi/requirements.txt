@@ -1,5 +1,5 @@
 fastapi
-uvicorn
+fastapi.responses
+pydantic
 uvicorn[standard]
 duckdb
-pydantic

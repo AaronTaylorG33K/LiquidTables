@@ -5,26 +5,17 @@ from pydantic import BaseModel
 from enum import Enum
 import json
 import duckdb
-import asyncio
 
 app = FastAPI()
-
-
-# In-memory data to simulate sales and inventory
-
-
-# Simple HTML page to test the WebSocket
 
 class ConnectionManager:
     def __init__(self) -> None:
         self.active_connections: List[WebSocket] = []
 
     async def connect(self, websocket: WebSocket):
-        # Add the WebSocket to the list of active connections
         self.active_connections.append(websocket)
 
     async def disconnect(self, websocket: WebSocket):
-        # Remove the WebSocket from the list of active connections
         self.active_connections.remove(websocket)
 
     async def send_personal_message(self, msg: str, websocket: WebSocket):
@@ -41,20 +32,28 @@ manager = ConnectionManager()
 async def get():
     return HTMLResponse(content='Im not the docs! /docs for more...', status_code=200)
 
-
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
-    await websocket.accept()  # Accept the WebSocket connection
+    await websocket.accept()
     await manager.connect(websocket)
     conn = None
     try:
-        # Open DuckDB connection
         conn = duckdb.connect(database='/var/lib/duckdb/mydatabase.db')
         while True:
-            # Poll data from DuckDB and send to clients every 5 seconds
             result = conn.execute('SELECT * FROM invoice').fetchall()
-            # Convert the 'date' object to a string representation
-            message_data = {"success": True, "data": result}
+            
+            json_data = [
+                {
+                    "id": row[0],
+                    "date": row[1].strftime("%Y-%m-%d %H:%M:%S"),  # Convert date to full datetime stamp
+                    "product": row[2],
+                    "customer": row[3],
+                    "salesperson": row[4],
+                    "amount": float(row[5])  # Convert Decimal to float
+                }
+                for row in result
+            ]
+            message_data = {"success": True, "data": json_data}
             try:
                 message_json = json.dumps(message_data)
                 await manager.broadcast(message_json)
@@ -63,18 +62,11 @@ async def websocket_endpoint(websocket: WebSocket):
             finally:
                 await manager.broadcast(str(result))
             
-            # message_data = {"success": True, "data": result}
-            # message_json = json.dumps(message_data)
-            # await manager.broadcast(str(result))
-            
             # Wait for data from the client
             data = await websocket.receive_text()
             response_data = {"success": True, "data": data}
             response_json = json.dumps(response_data)
             await manager.broadcast(response_json)
-            
-            # Optional: Add a delay between updates
-            await asyncio.sleep(2)
     
     except WebSocketDisconnect:
         manager.disconnect(websocket)
