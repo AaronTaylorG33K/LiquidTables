@@ -1,3 +1,30 @@
+# PersistentVolume
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: duckdb-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data/duckdb"
+
+---
+# PersistentVolumeClaim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: duckdb-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
 # Deployment for DuckDB
 apiVersion: apps/v1
 kind: Deployment
@@ -26,7 +53,13 @@ spec:
           limits:
             memory: "1Gi"
             cpu: "500m"
-      restartPolicy: Always
+        volumeMounts:
+        - name: duckdb-storage
+          mountPath: /var/lib/duckdb
+      volumes:
+      - name: duckdb-storage
+        persistentVolumeClaim:
+          claimName: duckdb-pvc
 
 ---
 # Deployment for FastAPI
@@ -49,6 +82,13 @@ spec:
         image: localhost:5001/fastapi:latest
         ports:
         - containerPort: 8000
+        volumeMounts:
+        - name: duckdb-storage
+          mountPath: /var/lib/duckdb
+      volumes:
+      - name: duckdb-storage
+        persistentVolumeClaim:
+          claimName: duckdb-pvc
 
 ---
 # Deployment for Svelte

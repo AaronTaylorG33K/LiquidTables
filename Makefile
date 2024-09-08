@@ -28,6 +28,8 @@ DUCKDB_CONTAINER_NAME = duckdb-container
 DUCKDB_PATH=/usr/local/bin/duckdb
 # Build all images
 build: build-fastapi build-svelte build-duckdb
+	@echo "\033[0;31m🔥 Images ready to go.\033[0m"
+	@echo "➡️ Now run \033[0;32m make init-db\033[0m"
 
 # Ensure local Docker registry is running
 ensure-registry:
@@ -78,7 +80,7 @@ port-forward:
 	@echo "Port forwarding FastAPI..."
 	kubectl port-forward service/fastapi $(PORT_FASTAPI):80 &
 	@echo "Port forwarding DuckDB..."
-	kubectl port-forward service/duckdb $(PORT_DUCKDB):$(PORT_DUCKDB) &
+	kubectl port-forward service/duckdb $(PORT_DUCKDB):$(PORT_DUCKDB) --address 0.0.0.0 &
 	@echo "Port forwarding Svelte..."
 	kubectl port-forward service/svelte $(PORT_SVELTE):80 &
 
@@ -115,21 +117,28 @@ clean-images:
 start: push deploy port-forward
 	@echo "Opening http://localhost in the browser..."
 	open http://localhost
-	@echo "
-	@echo "\033[0;34m"
-	@echo "   __    ____ ____   __  __ ____ ___       "
-	@echo "  / /   /  _// __ \ / / / //  _// _ \      "
-	@echo " / /__ _/ / / /_/ // /_/ /_/ / / // /      "
-	@echo "/____//___/ \___\_\\____//___//____/       "
-	@echo "\033[0;32m🔥 Stack started.\033[0m"
-	@echo "\033[0m"
-
+	@echo "🌊 LiquidTables started. Lets goooo!!!"
+	@echo ""
 # Command to stop and clean the stack
 clean:
-	@echo "Cleaning up stack..."
+	@echo "🔥\033[0;31mK\033[0;33mi\033[0;31ml\033[0;33ml\033[0;31m \033[0;33mi\033[0;31mt\033[0;33m \033[0;31mw\033[0;33mi\033[0;31mt\033[0;33mh\033[0;31m \033[0;33mf\033[0;31mi\033[0;33mr\033[0;31me\033[0;33m!\033[0m"
 	$(MAKE) stop
 	$(MAKE) clean-pods
 	$(MAKE) clean-images
+
+
+#lolz
+kill: clean
+	@echo "💀💀💀💀💀"
+
+# First run command
+init: build init-db push deploy port-forward
+	@echo "Opening http://localhost in the browser..."
+	open http://localhost
+	@echo "🌊 LiquidTables started. Lets goooo!!!"
+	@echo "Run \033[0;32mmake tail-logs\033[0m to view live logs"
+
+
 
 # Run schema SQL script inside DuckDB container
 run-schema:
@@ -165,6 +174,9 @@ run-seed:
 	fi
 # Initialize the database
 init-db: run-schema run-seed
+
+	@echo "\033[0;33m🔥 Databases locked and loaded\033[0m";
+	@echo "➡️ Now run \033[0;32m make start\033[0m";
 
 
 # Display help

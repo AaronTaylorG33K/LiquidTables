@@ -23,7 +23,7 @@ class ConnectionManager:
         # Add the WebSocket to the list of active connections
         self.active_connections.append(websocket)
 
-    def disconnect(self, websocket: WebSocket):
+    async def disconnect(self, websocket: WebSocket):
         # Remove the WebSocket from the list of active connections
         self.active_connections.remove(websocket)
 
@@ -39,24 +39,33 @@ manager = ConnectionManager()
 
 @app.get("/")
 async def get():
-    return HTMLResponse(content='wrong place, wrong time', status_code=200)
+    return HTMLResponse(content='Im not the docs! /docs for more...', status_code=200)
 
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()  # Accept the WebSocket connection
     await manager.connect(websocket)
-    
+    conn = None
     try:
         # Open DuckDB connection
-        conn = duckdb.connect('my_database.db')
-        
+        conn = duckdb.connect(database='/var/lib/duckdb/mydatabase.db')
         while True:
             # Poll data from DuckDB and send to clients every 5 seconds
             result = conn.execute('SELECT * FROM invoice').fetchall()
+            # Convert the 'date' object to a string representation
             message_data = {"success": True, "data": result}
-            message_json = json.dumps(message_data)
-            await manager.broadcast(message_json)
+            try:
+                message_json = json.dumps(message_data)
+                await manager.broadcast(message_json)
+            except Exception as e: 
+                await manager.broadcast(str(e))
+            finally:
+                await manager.broadcast(str(result))
+            
+            # message_data = {"success": True, "data": result}
+            # message_json = json.dumps(message_data)
+            # await manager.broadcast(str(result))
             
             # Wait for data from the client
             data = await websocket.receive_text()
@@ -74,4 +83,6 @@ async def websocket_endpoint(websocket: WebSocket):
         await manager.broadcast(error_json)
     
     finally:
-        conn.close()
+        await manager.disconnect(websocket)
+        if conn:
+            conn.close()

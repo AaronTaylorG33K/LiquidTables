@@ -23,6 +23,9 @@ RUN apt-get update \
 # Create the directory for the database
 RUN mkdir -p /var/lib/duckdb /scripts
 
+# Ensure the database file exists
+RUN touch /var/lib/duckdb/mydatabase.db
+
 # Copy the scripts folder into the container
 COPY ./scripts /scripts
 

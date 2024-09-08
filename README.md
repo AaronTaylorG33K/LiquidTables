@@ -10,17 +10,20 @@ To get started with FastTables, follow the steps below:
    ```bash
    make build
    ```
-
-2. **Bring up the stack:**
-   ```bash
-   make start
-   ```
-
-3. **Init the db schemas and seed them with sample data:**
+2. **Init the db schemas and seed them with sample data:**
    ```bash
    make init-db
    ```
 
+3. **Bring up the stack:**
+   ```bash
+   make start
+   ```
+
+4. **Bring the stack down:**
+   ```bash
+   make kill
+   ```
 
 
 
