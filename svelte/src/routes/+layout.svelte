@@ -3,13 +3,12 @@
 	import { onMount } from 'svelte';
 	import Header from '../components/header.svelte';
 	import Connection from '../components/connection.svelte';
-	import '../lib/websocket';
-	import ws from '../lib/websocket';
 	import '../tailwind.css';
+  import {closeWebSocket} from '../lib/websocket';
 
 	onMount(() => {
 		return () => {
-			ws.close();
+			closeWebSocket();
 		};
 	});
 </script>
@@ -23,4 +22,4 @@
 	<slot />
 </main>
 
-<Connection isConnected={true} />
+<Connection />

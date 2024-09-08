@@ -1,8 +1,6 @@
 export interface Metrics {
-    orders: number;
-    revenue: number;
-    averageOrderValue: number;
-    totalBeer: number;
-    totalWine: number;
-    totalWhiskey: number;
+    product: { id: number; name: string } | null;
+    customer: { id: number; name: string } | null;
+    salesperson: { id: number; name: string } | null;
+    amount: number
 }
