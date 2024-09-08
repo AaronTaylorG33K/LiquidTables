@@ -30,8 +30,6 @@ Below is a list of available `make` commands for managing the Docker images, Kub
   - `make port-forward` - Set up port forwarding for services.
 
 - **Database Commands:**
-  - `make run-schema` - Run the schema SQL script inside the DuckDB container.
-  - `make run-seed` - Run seed data SQL script inside the DuckDB container.
   - `make init-db` - Initialize the database by running the schema and seed SQL scripts.
 
 - **Logs and Cleanup:**
