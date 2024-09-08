@@ -1,6 +1,4 @@
-<!-- src/components/header.svelte -->
 <script>
-	// Any script logic for the header can go here
     import '../tailwind.css';
 </script>
 

@@ -11,11 +11,13 @@ ws.onopen = () => {
     // console.log('--->', data)
 };
 
+
+
 ws.onmessage = (event: MessageEvent) => {
     try {
-        // const data: Partial<Metrics> = JSON.parse(event.data);
+        const data: Partial<Metrics> = JSON.parse(event.data);
 
-        console.log(event.data);
+        console.log(data);
     } catch (error) {
         console.error('Error parsing message:', error);
     }

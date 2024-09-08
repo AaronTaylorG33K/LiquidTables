@@ -40,16 +40,33 @@ async def websocket_endpoint(websocket: WebSocket):
     try:
         conn = duckdb.connect(database='/var/lib/duckdb/mydatabase.db')
         while True:
-            result = conn.execute('SELECT * FROM invoice').fetchall()
+            result = conn.execute('''
+            SELECT
+                product.product_name,
+                customer.customer_name,
+                salesperson.salesperson_name,
+                SUM(invoice.amount) AS total_amount
+            FROM invoice
+            JOIN product ON invoice.product_id = product.product_id
+            JOIN customer ON invoice.customer_id = customer.customer_id
+            JOIN salesperson ON invoice.salesperson_id = salesperson.salesperson_id
+            GROUP BY GROUPING SETS (
+                (product.product_name, customer.customer_name, salesperson.salesperson_name),
+                (product.product_name, customer.customer_name),
+                (product.product_name, salesperson.salesperson_name),
+                (customer.customer_name, salesperson.salesperson_name),
+                (product.product_name),
+                (customer.customer_name),
+                (salesperson.salesperson_name),
+            );''').fetchall()
+            
             
             json_data = [
                 {
-                    "id": row[0],
-                    "date": row[1].strftime("%Y-%m-%d %H:%M:%S"),  # Convert date to full datetime stamp
-                    "product": row[2],
-                    "customer": row[3],
-                    "salesperson": row[4],
-                    "amount": float(row[5])  # Convert Decimal to float
+                    "product": row[0],
+                    "customer": row[1],
+                    "salesperson": row[2],
+                    "amount": float(row[3])  # Convert Decimal to float
                 }
                 for row in result
             ]
@@ -59,8 +76,6 @@ async def websocket_endpoint(websocket: WebSocket):
                 await manager.broadcast(message_json)
             except Exception as e: 
                 await manager.broadcast(str(e))
-            finally:
-                await manager.broadcast(str(result))
             
             # Wait for data from the client
             data = await websocket.receive_text()

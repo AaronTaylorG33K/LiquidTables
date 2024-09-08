@@ -1,17 +1,26 @@
 <!-- src/routes/__layout.svelte -->
 <script>
-  import Header from '../components/header.svelte';
-  import Footer from '../components/footer.svelte';
-  import '../tailwind.css';
+	import { onMount } from 'svelte';
+	import Header from '../components/header.svelte';
+	import Connection from '../components/connection.svelte';
+	import '../lib/websocket';
+	import ws from '../lib/websocket';
+	import '../tailwind.css';
+
+	onMount(() => {
+		return () => {
+			ws.close();
+		};
+	});
 </script>
 
-<title>
-  LiquidTables
-</title>
+<svelte:head>
+	<title>LiquidTables</title>
+</svelte:head>
 <Header />
 
 <main class="flex flex-col min-h-screen">
-  <slot /> <!-- This is where the page content will be injected -->
+	<slot />
 </main>
 
-<Footer />
+<Connection isConnected={true} />
