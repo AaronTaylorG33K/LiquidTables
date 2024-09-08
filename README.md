@@ -8,7 +8,7 @@ To get started with FastTables, follow the steps below:
 
 - **First run?:**
     ```bash
-   make build
+   make init
    ```
 
 Basic Commands
