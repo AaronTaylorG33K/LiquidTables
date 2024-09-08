@@ -8,11 +8,8 @@ To get started with FastTables, follow the steps below:
 
 **First run?:**
     ```bash
-    make init
-    ```
-
-
-
+   make build
+   ```
 **Build the Docker images:**
    ```bash
    make build
