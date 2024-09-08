@@ -35,12 +35,20 @@ async def websocket_endpoint(websocket: WebSocket):
         cursor = conn.cursor()
         while True:
             query = """
-             SELECT 
+            SELECT 
                 product.product_name,
                 customer.customer_name,
                 salesperson.salesperson_name,
                 SUM(invoice.amount) AS total_sales,
-                GROUPING(product.product_name, customer.customer_name, salesperson.salesperson_name) AS grouping_level
+                CASE
+                    WHEN GROUPING(product.product_name) = 1 AND GROUPING(customer.customer_name) = 1 AND GROUPING(salesperson.salesperson_name) = 1 THEN 0
+                    WHEN GROUPING(product.product_name) = 0 AND GROUPING(customer.customer_name) = 1 AND GROUPING(salesperson.salesperson_name) = 1 THEN 1
+                    WHEN GROUPING(product.product_name) = 1 AND GROUPING(customer.customer_name) = 0 AND GROUPING(salesperson.salesperson_name) = 1 THEN 2
+                    WHEN GROUPING(product.product_name) = 1 AND GROUPING(customer.customer_name) = 1 AND GROUPING(salesperson.salesperson_name) = 0 THEN 3
+                    WHEN GROUPING(product.product_name) = 0 AND GROUPING(customer.customer_name) = 0 AND GROUPING(salesperson.salesperson_name) = 0 THEN 4
+                    WHEN GROUPING(product.product_name) = 0 AND GROUPING(customer.customer_name) = 0 AND GROUPING(salesperson.salesperson_name) = 1 THEN 5
+                    ELSE 6
+                END AS grouping_level
             FROM 
                 invoice
             JOIN 
@@ -52,8 +60,9 @@ async def websocket_endpoint(websocket: WebSocket):
             WHERE 
                 invoice.invoice_date >= '2023-01-01'
             GROUP BY 
-                ROLLUP(product.product_name, customer.customer_name, salesperson.salesperson_name)
+                CUBE(product.product_name, customer.customer_name, salesperson.salesperson_name)
             ORDER BY 
+                grouping_level,
                 product.product_name, customer.customer_name, salesperson.salesperson_name
             """
             cursor.execute(query)

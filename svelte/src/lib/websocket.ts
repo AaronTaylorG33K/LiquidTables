@@ -7,7 +7,6 @@ const websocketStore = writable(ws);
 
 export let status = 'disconnected';
 ws.onopen = () => {
-    console.log('WebSocket connection established');
     status = 'connected';
 };
 

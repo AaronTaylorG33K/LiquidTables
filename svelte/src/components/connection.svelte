@@ -20,8 +20,6 @@
 			}
 		}, 1000);
 
-		console.log('Connection status', status);
-
 		if (status === 'connected') {
 			isConnected = true;
 		} else {
