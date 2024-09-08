@@ -11,7 +11,7 @@ To get started with FastTables, follow the steps below:
    make build
    ```
 
-
+Basic Commands
 - **Build the Docker images:**
    ```bash
    make build
@@ -34,7 +34,7 @@ To get started with FastTables, follow the steps below:
 
 
 
-## Makefile Commands
+## All Commands
 
 Below is a list of available `make` commands for managing the Docker images, Kubernetes deployments, and the DuckDB database.
 
