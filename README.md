@@ -6,7 +6,7 @@ LiquidTables is a project that combines FastAPI, Svelte, and DuckDB for fast and
 
 To get started with FastTables, you can either run the `make init` command, or use a more manually controlled process running individual `make` commands.
 
-- **FIRST RUN:**
+## FIRST RUN
     ```bash
    make init
    ```
