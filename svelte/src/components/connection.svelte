@@ -2,42 +2,28 @@
 	import { onMount } from 'svelte';
 	import { getConnectionStatus } from '../lib/websocket';
 
-	let isConnected = false;
+    let status = "disconnected"
 
 	onMount(() => {
-		const status = getConnectionStatus();
-		if (status === 'connected') {
-			isConnected = true;
-		} else {
-			isConnected = false;
-		}
+		status = getConnectionStatus();
+		
 		setInterval(() => {
-			const status = getConnectionStatus();
-			if (status === 'connected') {
-				isConnected = true;
-			} else {
-				isConnected = false;
-			}
+			status = getConnectionStatus();
 		}, 1000);
 
-		if (status === 'connected') {
-			isConnected = true;
-		} else {
-			isConnected = false;
-		}
 
 		return () => {
-			isConnected = false;
+			status = "disconnected";
 		};
 	});
 </script>
 
-<div class="fixed bottom-0 right-0">
+<div class="pl-12 pr-16">
 	<div
-		class={isConnected
-			? 'bg-green-500 text-white p-4 rounded-tl'
-			: 'bg-gray-500 text-white p-4 rounded-tl'}
+		class={status === "connected"
+			? ' text-gray-200 p-4 rounded-tl'
+			: ' text-slate-500 p-4 rounded-tl'}
 	>
-		<p>Websocket {isConnected ? 'Connected' : 'Disconnected'}</p>
+		Websocket {status}
 	</div>
 </div>

@@ -18,7 +18,7 @@
 </svelte:head>
 <Header />
 
-<main class="flex flex-col min-h-screen">
+<main class="flex flex-col">
 	<slot />
 </main>
 

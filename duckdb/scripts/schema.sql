@@ -1,3 +1,10 @@
+
+-- Drop the existing tables if they exist
+DROP TABLE IF EXISTS customer;
+DROP TABLE IF EXISTS salesperson;
+DROP TABLE IF EXISTS product;
+DROP TABLE IF EXISTS invoice;
+
 -- Check if the 'customer' table exists, and if not, create it
 CREATE TABLE IF NOT EXISTS customer (
     customer_id INTEGER PRIMARY KEY,
@@ -26,6 +33,7 @@ CREATE TABLE IF NOT EXISTS invoice (
     customer_id INTEGER,
     salesperson_id INTEGER,
     product_id INTEGER,
+    product_quantity INTEGER,
     amount DECIMAL(10, 2),
     FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
     FOREIGN KEY (salesperson_id) REFERENCES salesperson(salesperson_id),
