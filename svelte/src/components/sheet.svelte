@@ -39,7 +39,7 @@
 		Multi-dimensional roll up table built on WebSockets using Svelte, FastAPI & DuckDB
 	</p>
 	{#if $filteredData.length > 0}
-		<table class="border-separate border-spacing-0 w-full mt-16 border-gray-200 border-b">
+		<table class="border-separate border-spacing-0 w-full mt-16 border-gray-200 border-b mb-16">
 			<TableHeader />
 			<TableBody />
 		</table>
