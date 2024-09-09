@@ -1,9 +1,10 @@
 
 -- Drop the existing tables if they exist
+
+DROP TABLE IF EXISTS invoice;
 DROP TABLE IF EXISTS customer;
 DROP TABLE IF EXISTS salesperson;
 DROP TABLE IF EXISTS product;
-DROP TABLE IF EXISTS invoice;
 
 -- Check if the 'customer' table exists, and if not, create it
 CREATE TABLE IF NOT EXISTS customer (

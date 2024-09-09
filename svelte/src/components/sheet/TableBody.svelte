@@ -1,5 +1,6 @@
 <!-- TableBody.svelte -->
 <script lang="ts">
+	import { formatMoney } from '../../lib/format';
 	import {
 		filteredData,
 		filterByProduct,
@@ -41,6 +42,7 @@
 						{row.product && (row.groupingLevel === 1 || row.groupingLevel === 2)
 							? row.product
 							: row.product}
+
 					</a>
 				</td>
 			{/if}
@@ -95,7 +97,7 @@
 				class={`text-right border-r border-l
           ${$selectedProduct === row.product && row.groupingLevel === 1 && 'font-bold'}
           `}
-				colspan={row.groupingLevel === 0 ? 6 : 1}>${row.amount ?? ''}</td
+				colspan={row.groupingLevel === 0 ? 6 : 1}>{formatMoney(Number(row.amount)) ?? ''}</td
 			>
 		</tr>
 	{/each}
