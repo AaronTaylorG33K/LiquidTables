@@ -2,6 +2,8 @@
 
 LiquidTables is a project that combines FastAPI, Svelte, and DuckDB for fast and efficient data handling.
 
+<img width="1205" alt="Screenshot 2024-09-09 at 8 16 39 AM" src="https://github.com/user-attachments/assets/5d228303-95ff-4717-8405-9dca51034a54">
+
 ## How to Use LiquidTables
 
 To get started with FastTables, you can either run the `make init` command, or use a more manually controlled process running individual `make` commands.
@@ -9,10 +11,17 @@ To get started with FastTables, you can either run the `make init` command, or u
 ```bash
 make init
 ```
+
+Kill the stack and remove all pods (don't worry it's in a Namespace)
+```bash
+make kill
+```
+
 The manual equivelent in build commands
 - `make build`
-- `make init-db`
 - `make start`
+- `make init-db`
+
 
 ## All Commands
 
