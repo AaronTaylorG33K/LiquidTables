@@ -14,7 +14,6 @@ ws.onmessage = (event: MessageEvent) => {
 	status = 'connected';
 	try {
 		const response: { data: Partial<Metrics> } = JSON.parse(event.data);
-        console.log('->', response)
 		metricsStore.set(response.data);
 	} catch (error) {
 		console.error('Error parsing message:', error);
