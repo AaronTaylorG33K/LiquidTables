@@ -1,13 +1,14 @@
 query = """
         SELECT 
             product.product_name AS product,
+            produce.product_price AS price,
             customer.customer_name AS customer,
             salesperson.salesperson_name AS salesperson,
             invoice.invoice_id AS invoice_id,
             customer.customer_id AS customer_id,
             salesperson.salesperson_id AS salesperson_id,
             invoice.product_quantity AS quantity,
-            SUM(invoice.amount * invoice.product_quantity) AS amount,
+            SUM(product.product_price * invoice.product_quantity) AS amount,
             CASE
                 WHEN GROUPING(product.product_name) = 1 AND GROUPING(customer.customer_name) = 1 AND GROUPING(salesperson.salesperson_name) = 1 THEN 0  -- Grand total
                 WHEN GROUPING(product.product_name) = 0 AND GROUPING(customer.customer_name) = 1 AND GROUPING(salesperson.salesperson_name) = 1 THEN 1  -- Product only
@@ -32,7 +33,7 @@ query = """
                 (product.product_name),  -- Product only
                 (customer.customer_name, customer.customer_id),  -- Customer only
                 (salesperson.salesperson_name, salesperson.salesperson_id),  -- Salesperson only
-                (product.product_name, customer.customer_name, salesperson.salesperson_name, 
+                (product.product_name, product.product_price, customer.customer_name, salesperson.salesperson_name, 
                 invoice.invoice_id, customer.customer_id, salesperson.salesperson_id, invoice.product_quantity, amount)  -- Full grouping
             )
         ORDER BY 

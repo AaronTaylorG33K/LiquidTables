@@ -1,16 +1,16 @@
 -- Seed Initial Data
 
 -- Seed Product Data
-INSERT INTO product (product_id, product_name, product_price) VALUES (1, 'Jack Daniel Old No. 7 Tennessee Whiskey', 50.00);
-INSERT INTO product (product_id, product_name, product_price) VALUES (2, 'Hennessy V.S Cognac', 75.00);
-INSERT INTO product (product_id, product_name, product_price) VALUES (3, 'Jameson Irish Whiskey', 45.00);
-INSERT INTO product (product_id, product_name, product_price) VALUES (4, 'Johnnie Walker Blue Label', 150.00);
-INSERT INTO product (product_id, product_name, product_price) VALUES (5, 'Glenfiddich 12 Year Old Single Malt Scotch', 60.00);
-INSERT INTO product (product_id, product_name, product_price) VALUES (6, 'Bombay Sapphire Gin', 55.00);
-INSERT INTO product (product_id, product_name, product_price) VALUES (7, 'Patrón Silver Tequila', 80.00);
-INSERT INTO product (product_id, product_name, product_price) VALUES (8, 'Absolut Vodka', 40.00);
-INSERT INTO product (product_id, product_name, product_price) VALUES (9, 'Don Julio Blanco Tequila', 85.00);
-INSERT INTO product (product_id, product_name, product_price) VALUES (10, 'Belvedere Vodka', 70.00);
+INSERT INTO product (product_id, product_name, product_price) VALUES (1, 'Jack Daniel', 50.00);
+INSERT INTO product (product_id, product_name, product_price) VALUES (2, 'Hennessy', 75.00);
+INSERT INTO product (product_id, product_name, product_price) VALUES (3, 'Jameson', 45.00);
+INSERT INTO product (product_id, product_name, product_price) VALUES (4, 'Johnnie Walker', 150.00);
+INSERT INTO product (product_id, product_name, product_price) VALUES (5, 'Glenfiddich', 60.00);
+INSERT INTO product (product_id, product_name, product_price) VALUES (6, 'Bombay Sapphire', 55.00);
+INSERT INTO product (product_id, product_name, product_price) VALUES (7, 'Patrón', 80.00);
+INSERT INTO product (product_id, product_name, product_price) VALUES (8, 'Absolut', 40.00);
+INSERT INTO product (product_id, product_name, product_price) VALUES (9, 'Don Julio', 85.00);
+INSERT INTO product (product_id, product_name, product_price) VALUES (10, 'Belvedere', 70.00);
 
 -- Seed Customer Data
 INSERT INTO customer (customer_id, customer_name, customer_email) VALUES (1, 'Alice Johnson', 'alice.johnson@example.com');
