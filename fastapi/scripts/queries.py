@@ -33,7 +33,7 @@ query = """
                 (customer.customer_name, customer.customer_id),  -- Customer only
                 (salesperson.salesperson_name, salesperson.salesperson_id),  -- Salesperson only
                 (product.product_name, customer.customer_name, salesperson.salesperson_name, 
-                invoice.invoice_id, customer.customer_id, salesperson.salesperson_id, quantity, amount)  -- Full grouping
+                invoice.invoice_id, customer.customer_id, salesperson.salesperson_id, invoice.product_quantity, amount)  -- Full grouping
             )
         ORDER BY 
             grouping_level,

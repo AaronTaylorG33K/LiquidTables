@@ -20,6 +20,8 @@
   import TableBody from './sheet/TableBody.svelte';
   const unsubscribe = metricsStore.subscribe((metrics) => {
     if (Array.isArray(metrics)) {
+
+      console.log(metrics);
       const formattedMetrics = metrics.map(
         (metric: [string, string, string, number, number, number, number, number, number]) => ({
           product: metric[0],
@@ -28,11 +30,13 @@
           invoice_id: metric[3],
           customer_id: metric[4],
           salesperson_id: metric[5],
-          product_quantity: metrics[6],
+          quantity: metric[6],
           amount: metric[7],
           groupingLevel: metric[8]
         })
       );
+
+      console.log(formattedMetrics);
       data.set(formattedMetrics);
     }
   });

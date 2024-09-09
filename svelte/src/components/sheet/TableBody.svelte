@@ -10,6 +10,8 @@
 		selectedCustomer,
 		selectedSalesperson
 	} from '../../lib/filtering';
+
+    $: console.log(filteredData);
 </script>
 
 <tbody>
@@ -75,7 +77,7 @@
 						class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none placeholder-gray-400"
 						type="number"
 						placeholder="1"
-						value={row.product_quantity}
+						value={row.quantity}
 					/>
 				</td>
 			{/if}
