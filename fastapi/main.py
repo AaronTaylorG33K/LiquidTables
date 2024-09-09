@@ -3,24 +3,9 @@ from fastapi import WebSocket, FastAPI
 from fastapi.responses import HTMLResponse
 import duckdb
 from scripts.queries import query
+from util.connection_manager import ConnectionManager
 
 app = FastAPI()
-
-class ConnectionManager:
-    def __init__(self):
-        self.active_connections: List[WebSocket] = []
-
-    async def connect(self, websocket: WebSocket):
-        await websocket.accept()
-        self.active_connections.append(websocket)
-
-    async def disconnect(self, websocket: WebSocket):
-        self.active_connections.remove(websocket)
-
-    async def broadcast(self, message: str):
-        for connection in self.active_connections:
-            await connection.send_text(message)
-
 manager = ConnectionManager()
 
 @app.get("/")
@@ -36,6 +21,8 @@ async def websocket_endpoint(websocket: WebSocket):
         cursor = conn.cursor()
         while True:
             
+            # Work in progress
+            
             # Data out
             cursor.execute(query)
             result = cursor.fetchall()
@@ -48,6 +35,7 @@ async def websocket_endpoint(websocket: WebSocket):
             response_data = {"success": True, "dir": "in", "data": data}
             response_json = json.dumps(response_data, default=str)
             await manager.broadcast(response_json)
+            
     except Exception as e:
         error_message = {"success": False, "error": str(e)}
         await manager.broadcast(json.dumps(error_message))
@@ -58,4 +46,4 @@ async def websocket_endpoint(websocket: WebSocket):
         try:
             await websocket.close()
         except RuntimeError:
-            pass  # Ignore if the connection is already closed
+            pass
