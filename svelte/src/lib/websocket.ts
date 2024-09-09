@@ -1,40 +1,80 @@
-import { writable } from 'svelte/store';
+import { writable, type Writable } from 'svelte/store';
 import { metricsStore } from '../store/metrics';
 import type { Metrics } from '../types/metrics';
 
-const ws = new WebSocket('ws://localhost:8000/ws');
-const websocketStore = writable(ws);
+let ws: WebSocket | null = null;
+const retryInterval = 10000; // 10 seconds
+const status: Writable<string> = writable('disconnected');
 
-export let status = 'disconnected';
-ws.onopen = () => {
-	status = 'connected';
-};
+const websocketStore = writable<WebSocket | null>(null);
 
-ws.onmessage = (event: MessageEvent) => {
-	status = 'connected';
-	try {
-		const response: { data: Partial<Metrics> } = JSON.parse(event.data);
-		metricsStore.set(response.data);
-	} catch (error) {
-		console.error('Error parsing message:', error);
-	}
-};
+function initializeWebSocket() {
+	ws = new WebSocket('ws://localhost:8000/ws'); // local development
+	// ws = new WebSocket('ws://localhost:8000/ws'); // k8s
+	websocketStore.set(ws);
 
-ws.onclose = () => {
-	status = 'disconnected';
-};
+	ws.onopen = () => {
+		status.set('connected');
+	};
 
-ws.onerror = (error: Event) => {
-	console.warn('WebSocket error:', error);
-	status = 'disconnected';
-};
+	ws.onmessage = (event: MessageEvent) => {
+		status.set('connected');
+	
+		console.log('msg->', event.data);
+		try {
+			const response: { data: Partial<Metrics> } = JSON.parse(event.data);
+			try {
+				const data = response.data;
+				metricsStore.set(data);
+			} catch (error) {
+				console.error('Error updating local store:', error);
+			}
+		} catch (error) {
+			console.warn('Error parsing metrics:', error);
+		}
 
-export function sendMessage(message: Partial<Metrics>) {
-	if (ws.readyState === WebSocket.OPEN) {
+	};
+
+	ws.onclose = () => {
+		status.set('disconnected');
+		retryConnection();
+	};
+
+	ws.onerror = (error: Event) => {
+		// console.warn('WebSocket error:', error);
+		// status.set('disconnected');
+		// retryConnection();
+	};
+}
+
+function retryConnection() {
+	setTimeout(() => {
+		// console.log('Attempting to reconnect...');
+		initializeWebSocket();
+	}, retryInterval);
+}
+
+export function sendMessage(message: object) {
+	if (ws?.readyState === WebSocket.OPEN) {
 		ws.send(JSON.stringify(message));
-	} else {
-		console.error('WebSocket is not open. Ready state:', ws.readyState);
-	}
+	} 
+}
+
+export function updateQuantity(invoice_id: number, new_quantity: number) {
+	console.log('updateQuantity ---->', invoice_id, new_quantity);
+	const payload = {
+		data: {
+			invoice_id: invoice_id,
+			new_quantity: new_quantity,
+		},
+	};
+
+	// metricsStore.update((metrics) => {
+	// 	const updatedMetrics = { ...metrics, ...payload.data };
+	// 	return updatedMetrics;
+	// })
+
+	sendMessage(payload);
 }
 
 export function subscribe(callback: (message: Partial<Metrics>) => void) {
@@ -43,7 +83,7 @@ export function subscribe(callback: (message: Partial<Metrics>) => void) {
 }
 
 export function closeWebSocket() {
-	if (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING) {
+	if (ws?.readyState === WebSocket.OPEN || ws?.readyState === WebSocket.CONNECTING) {
 		ws.close();
 	}
 }
@@ -52,4 +92,8 @@ export function getConnectionStatus() {
 	return status;
 }
 
+// Initialize WebSocket connection
+initializeWebSocket();
+
+export { status };
 export default websocketStore;

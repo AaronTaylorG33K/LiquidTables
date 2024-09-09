@@ -4,7 +4,9 @@
 	import { data, filteredData } from '../lib/filtering';
 	import TableHeader from './sheet/TableHeader.svelte';
 	import TableBody from './sheet/TableBody.svelte';
-	const unsubscribe = metricsStore.subscribe((metrics) => {
+	import type { Metrics } from '../types/metrics';
+	const unsubscribe = metricsStore.subscribe((metrics: Partial<Metrics>) => {
+
 		if (Array.isArray(metrics)) {
 			const formattedMetrics = metrics.map(
 				(metric: [string, string, string, number, number, number, number, number, number]) => ({
@@ -19,7 +21,12 @@
 					groupingLevel: metric[8]
 				})
 			);
+
+			console.log('formattedMetrics', formattedMetrics);
 			data.set(formattedMetrics);
+		} else {
+			console.log('??? -> metrics', metrics);
+			
 		}
 	});
 

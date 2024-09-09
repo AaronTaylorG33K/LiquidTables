@@ -2,7 +2,6 @@
 <script>
 	import { onMount } from 'svelte';
 	import Header from '../components/header.svelte';
-	import Connection from '../components/connection.svelte';
 	import '../tailwind.css';
   import {closeWebSocket} from '../lib/websocket';
 
@@ -22,4 +21,3 @@
 	<slot />
 </main>
 
-<Connection />

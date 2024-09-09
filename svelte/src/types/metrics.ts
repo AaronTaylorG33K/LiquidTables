@@ -1,4 +1,8 @@
+export interface MetricValue {
+	quantity: number;
+  }
 export class Metrics {
+	[key: number]: MetricValue; 
 	constructor(
 		public product: string,
 		public customer: string,

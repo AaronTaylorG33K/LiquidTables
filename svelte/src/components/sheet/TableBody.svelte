@@ -2,6 +2,7 @@
 <script lang="ts">
 	import { formatMoney } from '../../lib/format';
 	import {
+		data,
 		filteredData,
 		filterByProduct,
 		filterByCustomer,
@@ -11,6 +12,23 @@
 		selectedCustomer,
 		selectedSalesperson
 	} from '../../lib/filtering';
+	import { sendMessage } from '../../lib/websocket';
+	import { metricsStore } from '../../store/metrics';
+	import { Metrics } from '../../types/metrics';
+
+
+  // Function to push updates to WebSocket
+  function pushUpdatesToWebSocket(invoice_id:number, new_quantity:number) {
+    console.log('Pushing updates to WebSocket:', { invoice_id, new_quantity });
+    sendMessage({ data: { invoice_id, new_quantity} });
+  }
+
+
+  function handleInput(event: Event, row: { invoice_id: number; quantity: number }) {
+    const target = event.target as HTMLInputElement;
+    row.quantity = parseInt(target.value);
+	pushUpdatesToWebSocket(row.invoice_id, row.quantity);
+  }
 </script>
 
 <tbody>
@@ -88,6 +106,9 @@
 						type="number"
 						placeholder="1"
 						value={row.quantity}
+						on:input={(event) => handleInput(event, row)}
+						
+ 
 					/>
 				</td>
 			{/if}
