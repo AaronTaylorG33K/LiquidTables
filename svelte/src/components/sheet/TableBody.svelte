@@ -2,7 +2,6 @@
 <script lang="ts">
 	import { formatMoney } from '../../lib/format';
 	import {
-		data,
 		filteredData,
 		filterByProduct,
 		filterByCustomer,
@@ -13,22 +12,12 @@
 		selectedSalesperson
 	} from '../../lib/filtering';
 	import { sendMessage } from '../../lib/websocket';
-	import { metricsStore } from '../../store/metrics';
-	import { Metrics } from '../../types/metrics';
 
-
-  // Function to push updates to WebSocket
-  function pushUpdatesToWebSocket(invoice_id:number, new_quantity:number) {
-    console.log('Pushing updates to WebSocket:', { invoice_id, new_quantity });
-    sendMessage({ data: { invoice_id, new_quantity} });
-  }
-
-
-  function handleInput(event: Event, row: { invoice_id: number; quantity: number }) {
-    const target = event.target as HTMLInputElement;
-    row.quantity = parseInt(target.value);
-	pushUpdatesToWebSocket(row.invoice_id, row.quantity);
-  }
+	function qtyChange(event: Event, row: { invoice_id: number; quantity: number }) {
+		const target = event.target as HTMLInputElement;
+		row.quantity = parseInt(target.value);
+		sendMessage({ data: { invoice_id: row.invoice_id, new_quantity: row.quantity } });
+	}
 </script>
 
 <tbody>
@@ -37,13 +26,12 @@
 			class={`p-4 group-${row.groupingLevel} index-${index} [&>td]:p-4  last:font-bold  odd:bg-gray-50  border [&>td]:border-t
         ${$selectedProduct === row.product && row.groupingLevel !== 0 && 'selected'}`}
 		>
-
-            <!-- invoice_id -->
+			<!-- invoice_id -->
 			{#if $show_id && row.groupingLevel > 3}
 				<td class="text-center border-l">{row.invoice_id}</td>
 			{/if}
-            
-            <!-- product -->
+
+			<!-- product -->
 			{#if row.product}
 				<td
 					width="40%"
@@ -61,12 +49,12 @@
 							? row.product
 							: row.product}
 
-                        {row.groupingLevel > 3 ? ` Case @ ${formatMoney(row.amount / row.quantity)}` : ''}
+						{row.groupingLevel > 3 ? ` Case @ ${formatMoney(row.amount / row.quantity)}` : ''}
 					</a>
 				</td>
 			{/if}
 
-            <!-- customer -->
+			<!-- customer -->
 			{#if row.customer}
 				<td
 					width="15%"
@@ -82,7 +70,7 @@
 				</td>
 			{/if}
 
-            <!-- salesperson -->
+			<!-- salesperson -->
 			{#if row.salesperson}
 				<td
 					width="15%"
@@ -97,8 +85,8 @@
 					>
 				</td>
 			{/if}
-                
-            <!-- quantity -->
+
+			<!-- quantity -->
 			{#if row.groupingLevel > 3 && (row.salesperson || row.customer || row.product)}
 				<td class="text-center border-l p-0" width="15%">
 					<input
@@ -106,14 +94,12 @@
 						type="number"
 						placeholder="1"
 						value={row.quantity}
-						on:input={(event) => handleInput(event, row)}
-						
- 
+						on:input={(event) => qtyChange(event, row)}
 					/>
 				</td>
 			{/if}
 
-            <!-- amount -->
+			<!-- amount -->
 			<td
 				width="15%"
 				class={`text-right border-r border-l

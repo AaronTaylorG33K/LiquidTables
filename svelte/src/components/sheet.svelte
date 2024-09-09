@@ -21,12 +21,9 @@
 					groupingLevel: metric[8]
 				})
 			);
-
-			console.log('formattedMetrics', formattedMetrics);
 			data.set(formattedMetrics);
 		} else {
-			console.log('??? -> metrics', metrics);
-			
+			console.log('??? -> metrics', metrics);	
 		}
 	});
 
