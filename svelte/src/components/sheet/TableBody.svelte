@@ -43,6 +43,7 @@
 							? row.product
 							: row.product}
 
+                        {row.groupingLevel > 3 ? ` Case @ ${formatMoney(row.amount / row.quantity)}` : ''}
 					</a>
 				</td>
 			{/if}
