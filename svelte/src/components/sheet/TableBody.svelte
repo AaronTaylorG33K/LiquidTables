@@ -10,8 +10,6 @@
 		selectedCustomer,
 		selectedSalesperson
 	} from '../../lib/filtering';
-
-    $: console.log(filteredData);
 </script>
 
 <tbody>
@@ -20,9 +18,13 @@
 			class={`p-4 group-${row.groupingLevel} index-${index} [&>td]:p-4  last:font-bold  odd:bg-gray-50  border [&>td]:border-t
         ${$selectedProduct === row.product && row.groupingLevel !== 0 && 'selected'}`}
 		>
+
+            <!-- invoice_id -->
 			{#if $show_id && row.groupingLevel > 3}
 				<td class="text-center border-l">{row.invoice_id}</td>
 			{/if}
+            
+            <!-- product -->
 			{#if row.product}
 				<td
 					width="40%"
@@ -43,6 +45,7 @@
 				</td>
 			{/if}
 
+            <!-- customer -->
 			{#if row.customer}
 				<td
 					width="15%"
@@ -57,6 +60,8 @@
 					>
 				</td>
 			{/if}
+
+            <!-- salesperson -->
 			{#if row.salesperson}
 				<td
 					width="15%"
@@ -71,6 +76,8 @@
 					>
 				</td>
 			{/if}
+                
+            <!-- quantity -->
 			{#if row.groupingLevel > 3 && (row.salesperson || row.customer || row.product)}
 				<td class="text-center border-l p-0" width="15%">
 					<input
@@ -82,6 +89,7 @@
 				</td>
 			{/if}
 
+            <!-- amount -->
 			<td
 				width="15%"
 				class={`text-right border-r border-l

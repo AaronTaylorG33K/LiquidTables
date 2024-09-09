@@ -7,7 +7,7 @@ query = """
             customer.customer_id AS customer_id,
             salesperson.salesperson_id AS salesperson_id,
             invoice.product_quantity AS quantity,
-            SUM(invoice.amount) AS amount,
+            SUM(invoice.amount * invoice.product_quantity) AS amount,
             CASE
                 WHEN GROUPING(product.product_name) = 1 AND GROUPING(customer.customer_name) = 1 AND GROUPING(salesperson.salesperson_name) = 1 THEN 0  -- Grand total
                 WHEN GROUPING(product.product_name) = 0 AND GROUPING(customer.customer_name) = 1 AND GROUPING(salesperson.salesperson_name) = 1 THEN 1  -- Product only
