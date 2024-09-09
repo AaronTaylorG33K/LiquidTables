@@ -5,8 +5,9 @@
 	import TableHeader from './sheet/TableHeader.svelte';
 	import TableBody from './sheet/TableBody.svelte';
 	import type { Metrics } from '../types/metrics';
-	const unsubscribe = metricsStore.subscribe((metrics: Partial<Metrics>) => {
 
+	// TODO: move this, its hacky, put it in the connection handler
+	const unsubscribe = metricsStore.subscribe((metrics: Partial<Metrics>) => {
 		if (Array.isArray(metrics)) {
 			const formattedMetrics = metrics.map(
 				(metric: [string, string, string, number, number, number, number, number, number]) => ({
@@ -22,8 +23,6 @@
 				})
 			);
 			data.set(formattedMetrics);
-		} else {
-			console.log('??? -> metrics', metrics);	
 		}
 	});
 

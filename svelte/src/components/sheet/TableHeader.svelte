@@ -1,4 +1,3 @@
-<!-- TableHeader.svelte -->
 <script lang="ts">
 	import {
 		filteredData,
@@ -12,12 +11,11 @@
 
 <thead class="sticky top-0 uppercase bg-white shadow-lg">
 	<tr class="[&>*]:p-4 [&>*]:text-slate-800 [&>*]:text-sm [&>th]:border-t">
-		<!-- Invoice_id -->
+		
 		{#if $show_id}
 			<th class="text-center font-light">ID</th>
 		{/if}
 
-		<!-- Vendor -->
 		{#if $filteredData.some((row) => row.product)}
 			<th class={`text-left flex justify-between ${$selectedProduct ? 'font-bold' : 'font-light'}`}>
 				Vendor
@@ -32,12 +30,10 @@
 			</th>
 		{/if}
 
-		<!-- Customer -->
 		{#if $filteredData.some((row) => row.customer)}
 			<th class={`text-center ${$selectedCustomer ? 'font-bold' : 'font-light'}`}> Customer </th>
 		{/if}
         
-		<!-- Salesperson-->
 		{#if $filteredData.some((row) => row.salesperson)}
 			<th class={`text-center ${$selectedSalesperson ? 'font-bold' : 'font-light'}`}>
 				Sales Person

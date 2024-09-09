@@ -8,6 +8,7 @@ const status: Writable<string> = writable('disconnected');
 
 const websocketStore = writable<WebSocket | null>(null);
 
+
 function initializeWebSocket() {
 	ws = new WebSocket('ws://localhost:8000/ws');
 	websocketStore.set(ws);

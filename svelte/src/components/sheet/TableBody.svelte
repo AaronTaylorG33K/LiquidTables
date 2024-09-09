@@ -21,92 +21,77 @@
 </script>
 
 <tbody>
-	{#each $filteredData as row, index}
+	{#each $filteredData as { invoice_id, quantity, groupingLevel: level, product, customer, salesperson, amount }, index}
+			
 		<tr
-			class={`p-4 group-${row.groupingLevel} index-${index} [&>td]:p-4  last:font-bold  odd:bg-gray-50  border [&>td]:border-t
-        ${$selectedProduct === row.product && row.groupingLevel !== 0 && 'selected'}`}
+			class={`p-4 group-${level} index-${index}  last:font-bold  odd:bg-gray-50  border [&>td]:border-t [&>td]:border-l 
+				${$selectedProduct === product && level !== 0 && 'selected'}`}
 		>
-			<!-- invoice_id -->
-			{#if $show_id && row.groupingLevel > 3}
-				<td class="text-center border-l">{row.invoice_id}</td>
+
+			{#if $show_id && level > 3}
+				<td class="text-center ">{invoice_id}</td>
 			{/if}
 
-			<!-- product -->
-			{#if row.product}
-				<td
-					width="40%"
-					class={`border-l`}
-					colspan={$selectedProduct && row.groupingLevel === 1 ? 5 : 1}
-				>
-					<a
-						href="#"
-						on:click|preventDefault={() => filterByProduct(row.product)}
+
+			{#if product}
+				<td width="40%" class={``} colspan={$selectedProduct && level === 1 ? 5 : 1}>
+					<button
+						on:click|preventDefault={() => filterByProduct(product)}
 						class={`underline hover:no-underline hover:text-blue-500 
-              ${$selectedProduct === row.product && row.groupingLevel !== 1 && 'text-gray-300 no-underline hover:text-gray-300 hover:underline'}
-              ${$selectedProduct === row.product && row.groupingLevel === 1 && 'font-bold'}`}
+              ${$selectedProduct === product && level !== 1 ? 'text-gray-300 no-underline hover:text-gray-300 hover:underline' : ($selectedProduct === product && level === 1) ? 'font-bold':''}
+			`}
 					>
-						{row.product && (row.groupingLevel === 1 || row.groupingLevel === 2)
-							? row.product
-							: row.product}
+						{product && (level === 1 || level === 2) ? product : product}
 
-						{row.groupingLevel > 3 ? ` Case @ ${formatMoney(row.amount / row.quantity)}` : ''}
-					</a>
+						{level > 3 ? ` Case @ ${formatMoney(amount / quantity)}` : ''}
+					</button>
 				</td>
 			{/if}
 
-			<!-- customer -->
-			{#if row.customer}
+			{#if customer}
 				<td
 					width="15%"
-					class={`border-l text-center ${$selectedCustomer && 'selected'}`}
-					colspan={$selectedCustomer && row.groupingLevel === 2 ? 5 : 1}
+					class={`text-center ${$selectedCustomer && 'selected'}`}
+					colspan={$selectedCustomer && level === 2 ? 5 : 1}
 				>
-					<a
-						href="#"
-						on:click|preventDefault={() => filterByCustomer(row.customer)}
+					<button
+						on:click|preventDefault={() => filterByCustomer(customer)}
 						class="underline hover:no-underline hover:text-blue-500"
-						>{(row.product && row.customer) ?? ''}</a
-					>
+						>{(product && customer) ?? ''}</button>
 				</td>
 			{/if}
 
-			<!-- salesperson -->
-			{#if row.salesperson}
+			{#if salesperson}
 				<td
 					width="15%"
-					class={`border-l text-center ${$selectedSalesperson && 'selected'}`}
-					colspan={$selectedSalesperson && row.groupingLevel === 3 ? 5 : 1}
+					class={` text-center ${$selectedSalesperson && 'selected'}`}
+					colspan={$selectedSalesperson && level === 3 ? 5 : 1}
 				>
-					<a
-						href="#"
-						on:click|preventDefault={() => filterBySalesperson(row.salesperson)}
+					<button
+						on:click|preventDefault={() => filterBySalesperson(salesperson)}
 						class="underline hover:no-underline hover:text-blue-500"
-						>{row.salesperson && row.groupingLevel !== 3 ? row.salesperson : ''}</a
+						>{salesperson && level !== 3 ? salesperson : ''}</button
 					>
 				</td>
 			{/if}
 
-			<!-- quantity -->
-			{#if row.groupingLevel > 3 && (row.salesperson || row.customer || row.product)}
-				<td class="text-center border-l p-0" width="15%">
+			{#if level > 3 && (salesperson || customer || product)}
+				<td class="text-center  p-0" width="15%">
 					<input
 						class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none placeholder-gray-400"
 						type="number"
 						placeholder="1"
-						value={row.quantity}
-						on:input={(event) => qtyChange(event, row)}
+						value={quantity}
+						on:input={(event) => qtyChange(event, { invoice_id, quantity })}
 					/>
 				</td>
 			{/if}
 
-			<!-- amount -->
 			<td
 				width="15%"
-				class={`text-right border-r border-l
-          ${$selectedProduct === row.product && row.groupingLevel === 1 && 'font-bold'}
-          `}
-				colspan={row.groupingLevel === 0 ? 6 : 1}>{formatMoney(Number(row.amount)) ?? ''}</td
-			>
+				class={`text-right border-r ${$selectedProduct === product && level === 1 && 'font-bold'} `}
+				colspan={level === 0 ? 6 : 1}>{formatMoney(Number(amount)) ?? ''}
+			</td>
 		</tr>
 	{/each}
 </tbody>
@@ -117,6 +102,9 @@
 		transition: background-color 0.3s ease;
 	}
 
+	td { 
+		padding: 1rem;
+	}
 	.tr.selected > td:first-child {
 		border-top: 1px solid rgb(30, 116, 170);
 	}
