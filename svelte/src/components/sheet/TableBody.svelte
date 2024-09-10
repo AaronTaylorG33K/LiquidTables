@@ -23,8 +23,9 @@
 <tbody>
 	{#each $filteredData as { invoice_id, quantity, groupingLevel: level, product, customer, salesperson, amount }, index}
 		<tr
-			class={`p-4 group-${level} index-${index}  last:font-bold  odd:bg-gray-50  border [&>td]:border-t [&>td]:border-l 
+			class={`p-4 group-${level} index-${index} last:font-bold  odd:bg-gray-50  border [&>td]:border-t [&>td]:border-l 
 				${$selectedProduct === product && level !== 0 && 'selected'}`}
+		
 		>
 			{#if $show_id && level > 3}
 				<td class="text-center">{invoice_id}</td>
@@ -112,12 +113,21 @@
 	}
 
 	.selected > td {
-		border-color: #ccc;
+		border-color: #e5e7eb;
 	}
 
+
+	.selected.group-2 > td {
+		border-top: 1px solid #e5e7eb;
+		border-bottom: 1px solid #e5e7eb;
+	}
 	.selected.group-4 > td {
 		border-top: none;
-		border-bottom: 1px solid #ccc;
+		border-bottom: 1px solid #e5e7eb;
+	}
+
+	td.selected {
+		border-color: #e5e7eb;
 	}
 
 	td {
@@ -126,4 +136,6 @@
 	.tr.selected > td:first-child {
 		border-top: 1px solid rgb(30, 116, 170);
 	}
+
+
 </style>
