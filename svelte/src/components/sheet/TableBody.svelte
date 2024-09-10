@@ -32,9 +32,9 @@
 
 			{#if product}
 				<td width="40%" colspan={$selectedProduct && level === 1 ? 5 : 1}>
-					<button 
+					<button
 						on:click|preventDefault={() => filterByProduct(product)}
-						class={`underline hover:no-underline hover:text-blue-500 ${($selectedProduct === product && level === 1) && 'font-bold'}`}
+						class={`underline hover:no-underline hover:text-blue-500 ${$selectedProduct === product && level === 1 && 'font-bold'}`}
 					>
 						{product && (level === 1 || level === 2) ? product : product}
 
@@ -97,6 +97,27 @@
 	.selected {
 		background-color: #eef8fe;
 		transition: background-color 0.3s ease;
+	}
+
+	.selected.group-1 {
+		box-shadow: 0px 0px 7px 4px rgba(0, 0, 0, 0.05);
+		position: relative;
+		z-index: 10;
+		border-bottom: 1px solid #ccc;
+	}
+	.selected.group-1 > td {
+		border-top: 1px solid #ccc;
+		border-bottom: 1px solid #ccc;
+		background-color: #fff;
+	}
+
+	.selected > td {
+		border-color: #ccc;
+	}
+
+	.selected.group-4 > td {
+		border-top: none;
+		border-bottom: 1px solid #ccc;
 	}
 
 	td {
