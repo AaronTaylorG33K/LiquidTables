@@ -23,9 +23,8 @@
 <tbody>
 	{#each $filteredData as { invoice_id, quantity, groupingLevel: level, product, customer, salesperson, amount }, index}
 		<tr
-			class={`p-4 group-${level} index-${index} last:font-bold  odd:bg-gray-50  border [&>td]:border-t [&>td]:border-l 
-				${$selectedProduct === product && level !== 0 && 'selected'}`}
-		
+			class={`p-4 group-${level} index-${index} last:font-bold  odd:bg-gray-50  border [&>td]:border-t [&>td]:border-l`}
+			class:selected={$selectedProduct === product && level !== 0}
 		>
 			{#if $show_id && level > 3}
 				<td class="text-center">{invoice_id}</td>
@@ -35,10 +34,10 @@
 				<td width="40%" colspan={$selectedProduct && level === 1 ? 5 : 1}>
 					<button
 						on:click|preventDefault={() => filterByProduct(product)}
-						class={`underline hover:no-underline hover:text-blue-500 ${$selectedProduct === product && level === 1 && 'font-bold'}`}
+						class="underline hover:no-underline hover:text-blue-500"
+						class:font-bold={$selectedProduct === product && level === 1}
 					>
 						{product && (level === 1 || level === 2) ? product : product}
-
 						{level > 3 ? ` Case @ ${formatMoney(amount / quantity)}` : ''}
 					</button>
 				</td>
@@ -47,7 +46,8 @@
 			{#if customer}
 				<td
 					width="15%"
-					class={`text-center ${$selectedCustomer && 'selected'}`}
+					class='text-center'
+					class:selected={$selectedCustomer}
 					colspan={$selectedCustomer && level === 2 ? 5 : 1}
 				>
 					<button
@@ -61,7 +61,8 @@
 			{#if salesperson}
 				<td
 					width="15%"
-					class={` text-center ${$selectedSalesperson && 'selected'}`}
+					class='text-center'
+					class:selected={$selectedSalesperson}
 					colspan={$selectedSalesperson && level === 3 ? 5 : 1}
 				>
 					<button
@@ -86,7 +87,8 @@
 
 			<td
 				width="15%"
-				class={`text-right border-r ${$selectedProduct === product && level === 1 && 'font-bold'} `}
+				class={`text-right border-r`}
+				class:font-bold={$selectedProduct === product && level === 1}
 				colspan={level === 0 ? 6 : 1}
 				>{formatMoney(Number(amount)) ?? ''}
 			</td>
@@ -103,7 +105,7 @@
 	.selected.group-1 {
 		box-shadow: 0px 0px 7px 4px rgba(0, 0, 0, 0.05);
 		position: relative;
-		z-index: 10;
+		/* z-index: 2; */
 		border-bottom: 1px solid #ccc;
 	}
 	.selected.group-1 > td {
@@ -115,7 +117,6 @@
 	.selected > td {
 		border-color: #e5e7eb;
 	}
-
 
 	.selected.group-2 > td {
 		border-top: 1px solid #e5e7eb;
@@ -136,6 +137,4 @@
 	.tr.selected > td:first-child {
 		border-top: 1px solid rgb(30, 116, 170);
 	}
-
-
 </style>

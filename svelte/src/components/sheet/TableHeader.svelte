@@ -1,5 +1,6 @@
 <script lang="ts">
 	import {
+		data,
 		filteredData,
 		show_id,
 		selectedProduct,
@@ -7,35 +8,73 @@
 		selectedSalesperson,
 		clearFilters
 	} from '../../lib/filtering';
+	import Selectable from './ColumnFilter.svelte';
+
+	let vendors = $data.filter((row) => row.groupingLevel === 1).map((row) => row.product);
+	let customers = $data.filter((row) => row.groupingLevel === 2).map((row) => row.customer);
+	let salespersons = $data.filter((row) => row.groupingLevel === 3).map((row) => row.salesperson);
 </script>
 
-<thead class="sticky top-0 uppercase bg-white shadow-lg">
-	<tr class="[&>*]:p-4 [&>*]:text-slate-800 [&>*]:text-sm [&>th]:border-t">
-		
+<thead class="uppercase bg-white shadow-lg z-30">
+	<tr class="[&>*]:p-2 [&>*]:pl-0 [&>*]:text-slate-800 [&>*]:text-sm [&>th]:border-t">
 		{#if $show_id}
 			<th class="text-center font-light">ID</th>
 		{/if}
 
 		{#if $filteredData.some((row) => row.product)}
-			<th class={`text-left flex justify-between ${$selectedProduct ? 'font-bold' : 'font-light'}`}>
-				Vendor
-				{#if !$selectedProduct && ($selectedCustomer || $selectedSalesperson)}
-					<button
-						on:click|preventDefault={() => clearFilters()}
-						class="underline hover:no-underline hover:text-blue-500 text-xs text-blue-500"
-						>Show All</button
-					>
+			<th
+				class="text-left justify-between"
+				class:font-bold={$selectedProduct}
+				class:font-light={!$selectedProduct}
+			>
+				{#if !$selectedCustomer && !$selectedSalesperson && !$selectedProduct}
+					<div class="p-2 uppercase">Vendor</div>
 				{/if}
+
+				<Selectable
+					options={vendors}
+					visible={$selectedProduct || $selectedCustomer || $selectedSalesperson}
+					type="product"
+					selected={$selectedProduct}
+				/>
 			</th>
 		{/if}
 
 		{#if $filteredData.some((row) => row.customer)}
-			<th class={`text-center ${$selectedCustomer ? 'font-bold' : 'font-light'}`}> Customer </th>
+			<th
+				class="relative text-center"
+				class:font-bold={$selectedCustomer}
+				class:font-light={!$selectedCustomer}
+			>
+				{#if !$filteredData.some((row) => row.customer) || !$filteredData.some((row) => row.salesperson)}
+					Customer
+				{/if}
+				<Selectable
+					options={customers}
+					visible={$filteredData.some((row) => row.customer) ||
+						$filteredData.some((row) => row.salesperson)}
+					type="customer"
+					selected={$selectedCustomer !== ''}
+				/>
+			</th>
 		{/if}
-        
+
 		{#if $filteredData.some((row) => row.salesperson)}
-			<th class={`text-center ${$selectedSalesperson ? 'font-bold' : 'font-light'}`}>
-				Sales Person
+			<th
+				class="text-center"
+				class:font-bold={$selectedSalesperson}
+				class:font-light={!$selectedSalesperson}
+			>
+				{#if !$filteredData.some((row) => row.customer) || !$filteredData.some((row) => row.salesperson)}
+					Salesperson
+				{/if}
+				<Selectable
+					options={salespersons}
+					visible={$filteredData.some((row) => row.customer) ||
+						$filteredData.some((row) => row.salesperson)}
+					type="salesperson"
+					selected={$selectedSalesperson}
+				/>
 			</th>
 		{/if}
 
@@ -43,9 +82,11 @@
 		{#if $filteredData.some((row) => row.groupingLevel !== 1 && row.groupingLevel !== 0)}
 			<th class="text-center font-light">Qty</th>
 		{/if}
-        
+
 		<!-- Total -->
-		<th class="text-black text-right border-r rounded-tr-lg font-light">Total</th>
+		<th class="text-black text-right border-r rounded-tr-lg font-light"
+			><div class="p-2">Total</div></th
+		>
 	</tr>
 </thead>
 

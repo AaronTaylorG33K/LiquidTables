@@ -62,26 +62,22 @@ export function clearFilters() {
   selectedProduct.set(null);
   selectedCustomer.set(null);
   selectedSalesperson.set(null);
-  groupingLevels.set([1, 0]);
 }
 
 export function filterByProduct(product: string) {
+  clearFilters();
   selectedProduct.set(product);
-  selectedCustomer.set(null);
-  selectedSalesperson.set(null);
   groupingLevels.set([1, 4]);
 }
 
 export function filterByCustomer(customer: string) {
+  clearFilters();
   selectedCustomer.set(customer);
-  selectedProduct.set(null);
-  selectedSalesperson.set(null);
   groupingLevels.set([2, 3, 4]);
 }
 
 export function filterBySalesperson(salesperson: string) {
+  clearFilters();
   selectedSalesperson.set(salesperson);
-  selectedCustomer.set(null);
-  selectedProduct.set(null);
   groupingLevels.set([3, 4, 5]);
 }
