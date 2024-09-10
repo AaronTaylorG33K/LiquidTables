@@ -2,7 +2,7 @@
 
 LiquidTables is a project that combines FastAPI, Svelte, and DuckDB for fast and efficient data handling.
 
-<img width="1205" alt="Screenshot 2024-09-09 at 8 16 39 AM" src="https://github.com/user-attachments/assets/5d228303-95ff-4717-8405-9dca51034a54">
+<img width="925" alt="Screenshot 2024-09-10 at 2 33 36 PM" src="https://github.com/user-attachments/assets/af9f9fa9-2e98-4ae1-adee-a0e626777275">
 
 ## Prerequesites
 
@@ -10,6 +10,7 @@ Docker & K8s, install it!
 
 
 ## How to Use LiquidTables
+
 
 To get started with FastTables, you can either run the `make init` command, or use a more manually controlled process running individual `make` commands.
 
