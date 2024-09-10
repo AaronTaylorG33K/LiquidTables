@@ -39,7 +39,8 @@
 						options={vendors}
 						visible={$selectedProduct || $selectedCustomer || $selectedSalesperson}
 						type="product"
-						selected={$selectedProduct}
+						selected={false}
+						value={$selectedProduct}
 					/>
 				</div>
 			</th>
@@ -59,7 +60,8 @@
 					visible={$filteredData.some((row) => row.customer) ||
 						$filteredData.some((row) => row.salesperson)}
 					type="customer"
-					selected={$selectedCustomer !== ''}
+					selected={$selectedCustomer && !$selectedProduct && !$selectedSalesperson}
+					value={$selectedCustomer}
 				/>
 			</th>
 		{/if}
@@ -78,7 +80,8 @@
 					visible={$filteredData.some((row) => row.customer) ||
 						$filteredData.some((row) => row.salesperson)}
 					type="salesperson"
-					selected={$selectedSalesperson}
+					selected={$selectedSalesperson && !$selectedProduct && !$selectedCustomer}
+					value={$selectedSalesperson}
 				/>
 			</th>
 		{/if}
