@@ -9,8 +9,6 @@
     let annyang;
     let isPressed = false;
 
-    console.log({ $data });
-
     const filteredData = [
         { type: 'vendor', name: 'Vendor 1' },
         { type: 'customer', name: 'Customer 1' },
@@ -55,7 +53,6 @@
                 )
             );
         });
-        console.log('Search results:', searchResults);
     }
 
     function startVoiceSearch() {

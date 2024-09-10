@@ -1,6 +1,6 @@
 
 <script lang="ts">
-     import Sheet from '../components/sheet.svelte';
+     import LiquidTables from '../components/LiquidTables.svelte';
 </script>
 
-<Sheet/>
+<LiquidTables/>

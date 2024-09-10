@@ -5,30 +5,10 @@
 	import TableHeader from './sheet/TableHeader.svelte';
 	import TableBody from './sheet/TableBody.svelte';
 	import type { Metrics } from '../types/metrics';
-
-	// TODO: move this, its hacky, put it in the connection handler
-	const unsubscribe = metricsStore.subscribe((metrics: Partial<Metrics>) => {
-		if (Array.isArray(metrics)) {
-			const formattedMetrics = metrics.map(
-				(metric: [string, string, string, number, number, number, number, number, number]) => ({
-					product: metric[0],
-					customer: metric[1],
-					salesperson: metric[2],
-					invoice_id: metric[3],
-					customer_id: metric[4],
-					salesperson_id: metric[5],
-					quantity: metric[6],
-					amount: metric[7],
-					groupingLevel: metric[8]
-				})
-			);
-			data.set(formattedMetrics);
-		}
-	});
+	import SearchBar from './search/index.svelte';
 
 	onMount(() => {
 		return () => {
-			unsubscribe();
 		};
 	});
 </script>
@@ -38,6 +18,7 @@
 	<p class="text-gray-500">
 		Multi-dimensional roll up table built on WebSockets using Svelte, FastAPI & DuckDB
 	</p>
+	<!-- <SearchBar /> in development -->
 	{#if $filteredData.length > 0}
 		<table class="border-separate border-spacing-0 w-full mt-16 border-gray-200 border-b mb-16">
 		<TableHeader />
