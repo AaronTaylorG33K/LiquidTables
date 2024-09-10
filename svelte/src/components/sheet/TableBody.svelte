@@ -39,8 +39,8 @@
 				<td width="40%" 
 				colspan={$selectedProduct && level === 1 ? $selectedProduct === product ? 4:5 : 1}>
 					<button
-						on:click|preventDefault={() => filterByProduct(product)}
-						class="underline hover:no-underline hover:text-blue-500"
+						on:click={() => filterByProduct(product)}
+						class="underline hover:no-underline hover:text-blue-500 cursor-pointer"
 						class:font-bold={$selectedProduct === product && level === 1}
 						
 					>
@@ -52,14 +52,14 @@
 
 			{#if customer}
 				<td
-					width="10%"
+					width="15%"
 					class='text-center'
 					class:selected={$selectedCustomer}
 					colspan={$selectedCustomer && level === 2 ? 5 : 1}
 				>
 					<button
 						on:click|preventDefault={() => filterByCustomer(customer)}
-						class="underline hover:no-underline hover:text-blue-500"
+						class="underline hover:no-underline hover:text-blue-500 cursor-pointer"
 						>{(product && customer) ?? ''}</button
 					>
 				</td>
@@ -67,21 +67,21 @@
 
 			{#if salesperson}
 				<td
-					width="10%"
+					width="15%"
 					class='text-center'
 					class:selected={$selectedSalesperson}
 					colspan={$selectedSalesperson && level === 3 ? 5 : 1}
 				>
 					<button
 						on:click|preventDefault={() => filterBySalesperson(salesperson)}
-						class="underline hover:no-underline hover:text-blue-500"
+						class="cursor-pointer underline hover:no-underline hover:text-blue-500 hover:cursor-pointer"
 						>{salesperson && level !== 3 ? salesperson : ''}</button
 					>
 				</td>
 			{/if}
 
 			{#if level > 3 && (salesperson || customer || product)}
-				<td class="text-center p-0" width="15%">
+				<td class="text-center p-0" width="10%">
 					<input
 						class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none placeholder-gray-400"
 						type="number"
@@ -93,7 +93,7 @@
 			{/if}
 
 			<td
-				width="15%"
+				width="5%"
 				class={`text-right border-r`}
 				class:font-bold={$selectedProduct === product && level === 1}
 				colspan={level === 0 ? 6 : 1}

@@ -69,7 +69,7 @@
 
 {#if visible}
     <div bind:this={container} class="relative z-40">
-        <button type="button" class="option p-2 w-full flex uppercase font-light justify-between cursor-pointer hover:bg-gray-100 border border-gray-100 rounded-lg" on:click={() => { open = !open }} aria-haspopup="listbox" aria-expanded={open}>
+        <button type="button" class="option cursor-pointer p-2 w-full flex uppercase font-light justify-between cursor-pointer hover:bg-gray-100 border border-gray-100 rounded-lg" on:click={() => { open = !open }} aria-haspopup="listbox" aria-expanded={open}>
             <span class="flex-1 text-center" class:font-bold={selected === type}>{type === 'product' ? 'Vendor' : type}</span>
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block ml-auto" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M10 15a1 1 0 01-.707-.293l-4-4a1 1 0 011.414-1.414L10 12.586l3.293-3.293a1 1 0 011.414 1.414l-4 4A1 1 0 0110 15z" clip-rule="evenodd" />

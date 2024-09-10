@@ -10,8 +10,7 @@
 	} from '../../lib/filtering';
 	import Selectable from './ColumnFilter.svelte';
 
-	data.subscribe((value) => {
-	});
+	data.subscribe((value) => {});
 
 	let vendors = $data.filter((row) => row.groupingLevel === 1).map((row) => row.product);
 	let customers = $data.filter((row) => row.groupingLevel === 2).map((row) => row.customer);
@@ -20,10 +19,8 @@
 
 <thead class="uppercase bg-white shadow-lg z-30">
 	<tr class="[&>*]:p-2 [&>*]:pl-0 [&>*]:text-slate-800 [&>*]:text-sm [&>th]:border-t">
-		{#if ($selectedCustomer || $selectedSalesperson)}
-			<th class="text-center font-light">
-				<div class="pl-2">ID</div></th>
-	
+		{#if $selectedCustomer || $selectedSalesperson}
+			<th class="text-center font-light"> <div class="pl-2">ID</div></th>
 		{/if}
 
 		{#if $filteredData.some((row) => row.product)}
@@ -38,19 +35,19 @@
 				{/if}
 
 				<div class="pl-2">
-				<Selectable
-					options={vendors}
-					visible={$selectedProduct || $selectedCustomer || $selectedSalesperson}
-					type="product"
-					selected={$selectedProduct}
-				/>
+					<Selectable
+						options={vendors}
+						visible={$selectedProduct || $selectedCustomer || $selectedSalesperson}
+						type="product"
+						selected={$selectedProduct}
+					/>
 				</div>
 			</th>
 		{/if}
 
 		{#if $filteredData.some((row) => row.customer)}
 			<th
-				class="relative text-center"
+				class=" text-center"
 				class:font-bold={$selectedCustomer}
 				class:font-light={!$selectedCustomer}
 			>
