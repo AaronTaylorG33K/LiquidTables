@@ -4,7 +4,7 @@ import type { Metrics } from '../types/metrics';
 export const data = writable<Metrics[]>([]);
 export const groupingLevels = writable<number[]>([1, 0]);
 
-export const selectedProduct = writable<string | null>(null);
+export const selectedProduct = writable<string | null>('Don Julio');
 export const selectedCustomer = writable<string | null>(null);
 export const selectedSalesperson = writable<string | null>(null);
 
