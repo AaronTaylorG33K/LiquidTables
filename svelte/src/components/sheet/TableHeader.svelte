@@ -10,6 +10,9 @@
 	} from '../../lib/filtering';
 	import Selectable from './ColumnFilter.svelte';
 
+	data.subscribe((value) => {
+	});
+
 	let vendors = $data.filter((row) => row.groupingLevel === 1).map((row) => row.product);
 	let customers = $data.filter((row) => row.groupingLevel === 2).map((row) => row.customer);
 	let salespersons = $data.filter((row) => row.groupingLevel === 3).map((row) => row.salesperson);
@@ -17,8 +20,10 @@
 
 <thead class="uppercase bg-white shadow-lg z-30">
 	<tr class="[&>*]:p-2 [&>*]:pl-0 [&>*]:text-slate-800 [&>*]:text-sm [&>th]:border-t">
-		{#if $show_id}
-			<th class="text-center font-light">ID</th>
+		{#if ($selectedCustomer || $selectedSalesperson)}
+			<th class="text-center font-light">
+				<div class="pl-2">ID</div></th>
+	
 		{/if}
 
 		{#if $filteredData.some((row) => row.product)}
@@ -26,17 +31,20 @@
 				class="text-left justify-between"
 				class:font-bold={$selectedProduct}
 				class:font-light={!$selectedProduct}
+				colspan={$selectedProduct ? 2 : 1}
 			>
 				{#if !$selectedCustomer && !$selectedSalesperson && !$selectedProduct}
-					<div class="p-2 uppercase">Vendor</div>
+					<div class="p-2 pl-4 uppercase">Vendor</div>
 				{/if}
 
+				<div class="pl-2">
 				<Selectable
 					options={vendors}
 					visible={$selectedProduct || $selectedCustomer || $selectedSalesperson}
 					type="product"
 					selected={$selectedProduct}
 				/>
+				</div>
 			</th>
 		{/if}
 

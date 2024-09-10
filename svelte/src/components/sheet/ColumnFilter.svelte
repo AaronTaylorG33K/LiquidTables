@@ -55,16 +55,20 @@
     }
 
     onMount(() => {
-        document.addEventListener('click', handleClickOutside);
+        if (typeof window !== 'undefined') {
+            document.addEventListener('click', handleClickOutside);
+        }
     });
 
     onDestroy(() => {
-        document.removeEventListener('click', handleClickOutside);
+        if (typeof window !== 'undefined') {
+            document.removeEventListener('click', handleClickOutside);
+        }
     });
 </script>
 
 {#if visible}
-    <div bind:this={container} class="relative z-40 min-w-[200px]">
+    <div bind:this={container} class="relative z-40">
         <button type="button" class="option p-2 w-full flex uppercase font-light justify-between cursor-pointer hover:bg-gray-100 border border-gray-100 rounded-lg" on:click={() => { open = !open }} aria-haspopup="listbox" aria-expanded={open}>
             <span class="flex-1 text-center" class:font-bold={selected === type}>{type === 'product' ? 'Vendor' : type}</span>
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block ml-auto" viewBox="0 0 20 20" fill="currentColor">
@@ -72,7 +76,7 @@
             </svg>
         </button>
         {#if open}
-            <div class="absolute flex flex-col z-30 bg-white w-full shadow-md p-2 capitalize" role="listbox">
+            <div class="absolute flex flex-col z-30 bg-white w-full shadow-md p-2 capitalize min-w-[120px]" role="listbox">
                 {#each options as option}
                     <button type="button" class="option text-left bg-white hover:bg-gray-100 cursor-pointer text-gray-800 font-light p-1" on:click={() => selectOption(option)} role="option" aria-selected={selected === option}>
                         {option}

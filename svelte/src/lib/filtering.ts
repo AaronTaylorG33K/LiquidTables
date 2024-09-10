@@ -53,9 +53,10 @@ export const filteredData = derived(
     return filtered;
   }
 );
-
-export const show_id = derived(filteredData, ($filteredData) =>
-  $filteredData.some((row) => row.customer) || $filteredData.some((row) => row.salesperson)
+export const show_id = derived(
+  [filteredData, selectedProduct],
+  ([$filteredData]) =>
+    $filteredData.some((row) => row.customer || row.salesperson)
 );
 
 export function clearFilters() {

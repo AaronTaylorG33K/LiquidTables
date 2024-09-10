@@ -26,16 +26,23 @@
 			class={`p-4 group-${level} index-${index} last:font-bold  odd:bg-gray-50  border [&>td]:border-t [&>td]:border-l`}
 			class:selected={$selectedProduct === product && level !== 0}
 		>
+
+			{#if $selectedProduct && $selectedProduct === product && level === 1}
+				<td class="text-center font-light" width="5%">ID</td>
+			
+			{/if}
 			{#if $show_id && level > 3}
-				<td class="text-center">{invoice_id}</td>
+				<td class="text-center" width="5%">{invoice_id}</td>
 			{/if}
 
 			{#if product}
-				<td width="40%" colspan={$selectedProduct && level === 1 ? 5 : 1}>
+				<td width="40%" 
+				colspan={$selectedProduct && level === 1 ? $selectedProduct === product ? 4:5 : 1}>
 					<button
 						on:click|preventDefault={() => filterByProduct(product)}
 						class="underline hover:no-underline hover:text-blue-500"
 						class:font-bold={$selectedProduct === product && level === 1}
+						
 					>
 						{product && (level === 1 || level === 2) ? product : product}
 						{level > 3 ? ` Case @ ${formatMoney(amount / quantity)}` : ''}
@@ -45,7 +52,7 @@
 
 			{#if customer}
 				<td
-					width="15%"
+					width="10%"
 					class='text-center'
 					class:selected={$selectedCustomer}
 					colspan={$selectedCustomer && level === 2 ? 5 : 1}
@@ -60,7 +67,7 @@
 
 			{#if salesperson}
 				<td
-					width="15%"
+					width="10%"
 					class='text-center'
 					class:selected={$selectedSalesperson}
 					colspan={$selectedSalesperson && level === 3 ? 5 : 1}
