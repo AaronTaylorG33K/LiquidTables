@@ -22,24 +22,19 @@
 
 <tbody>
 	{#each $filteredData as { invoice_id, quantity, groupingLevel: level, product, customer, salesperson, amount }, index}
-			
 		<tr
 			class={`p-4 group-${level} index-${index}  last:font-bold  odd:bg-gray-50  border [&>td]:border-t [&>td]:border-l 
 				${$selectedProduct === product && level !== 0 && 'selected'}`}
 		>
-
 			{#if $show_id && level > 3}
-				<td class="text-center ">{invoice_id}</td>
+				<td class="text-center">{invoice_id}</td>
 			{/if}
 
-
 			{#if product}
-				<td width="40%" class={``} colspan={$selectedProduct && level === 1 ? 5 : 1}>
-					<button
+				<td width="40%" colspan={$selectedProduct && level === 1 ? 5 : 1}>
+					<button 
 						on:click|preventDefault={() => filterByProduct(product)}
-						class={`underline hover:no-underline hover:text-blue-500 
-              ${$selectedProduct === product && level !== 1 ? 'text-gray-300 no-underline hover:text-gray-300 hover:underline' : ($selectedProduct === product && level === 1) ? 'font-bold':''}
-			`}
+						class={`underline hover:no-underline hover:text-blue-500 ${($selectedProduct === product && level === 1) && 'font-bold'}`}
 					>
 						{product && (level === 1 || level === 2) ? product : product}
 
@@ -57,7 +52,8 @@
 					<button
 						on:click|preventDefault={() => filterByCustomer(customer)}
 						class="underline hover:no-underline hover:text-blue-500"
-						>{(product && customer) ?? ''}</button>
+						>{(product && customer) ?? ''}</button
+					>
 				</td>
 			{/if}
 
@@ -76,7 +72,7 @@
 			{/if}
 
 			{#if level > 3 && (salesperson || customer || product)}
-				<td class="text-center  p-0" width="15%">
+				<td class="text-center p-0" width="15%">
 					<input
 						class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none placeholder-gray-400"
 						type="number"
@@ -90,7 +86,8 @@
 			<td
 				width="15%"
 				class={`text-right border-r ${$selectedProduct === product && level === 1 && 'font-bold'} `}
-				colspan={level === 0 ? 6 : 1}>{formatMoney(Number(amount)) ?? ''}
+				colspan={level === 0 ? 6 : 1}
+				>{formatMoney(Number(amount)) ?? ''}
 			</td>
 		</tr>
 	{/each}
@@ -102,7 +99,7 @@
 		transition: background-color 0.3s ease;
 	}
 
-	td { 
+	td {
 		padding: 1rem;
 	}
 	.tr.selected > td:first-child {

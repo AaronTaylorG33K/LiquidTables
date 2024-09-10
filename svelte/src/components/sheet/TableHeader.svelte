@@ -20,11 +20,10 @@
 			<th class={`text-left flex justify-between ${$selectedProduct ? 'font-bold' : 'font-light'}`}>
 				Vendor
 				{#if !$selectedProduct && ($selectedCustomer || $selectedSalesperson)}
-					<a
-						href="#"
+					<button
 						on:click|preventDefault={() => clearFilters()}
 						class="underline hover:no-underline hover:text-blue-500 text-xs text-blue-500"
-						>Show All</a
+						>Show All</button
 					>
 				{/if}
 			</th>
