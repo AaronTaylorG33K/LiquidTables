@@ -53,9 +53,13 @@
 
 
 	$: {
-        const { params } = $page;
+        
+		const { params } = $page;
+
+
         const filterByColumn = params.column as keyof Metrics;
         const filterByColumnValue = params.column_value;
+
         applyFilter(filterByColumn, filterByColumnValue);
     }
 </script>
@@ -63,8 +67,8 @@
 <!-- <SearchBar /> in development -->
 {#if $filteredData.length > 0}
 	<table class="w-full border-b border-separate border-spacing-0 border-gray-200 overflow-y-auto">
-		<TableHeader {columns} />
-		<TableBody {filteredData} {columns} />
+		<TableHeader {columns} {filterByColumn} />
+		<TableBody {filteredData} {columns} {filterByColumn} {filterByColumnValue}/>
 	</table>
 {/if}
 

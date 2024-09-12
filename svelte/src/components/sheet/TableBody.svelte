@@ -7,6 +7,14 @@
 
 	export let filteredData: Metrics[] = [];
 	export let columns: string[] = [];
+	export let filterByColumn: string = '';
+	export let filterByColumnValue: string = '';
+
+	const colConfig = [
+		{ type: 'invoice_id', input: '' },
+		{ type: 'total', input: '' }
+	];
+
 
 	function qtyChange(event: Event, row: { invoice_id: number; quantity: number }) {
 		const target = event.target as HTMLInputElement;
@@ -20,13 +28,16 @@
 		<tr class={`p-4 group-${row.groupingLevel} index-${index}  odd:bg-gray-50 `}>
 			{#each $columns as column}
 				{#if column === 'amount'}
-					<td width="2%" class="text-right border-r">
+					<td width="2%" class={`text-right border-r ${column}`}>
 						{formatMoney(Number(row[column])) ?? ''}
 					</td>
-				{:else if column === 'customer' || column === 'product' || column === 'salesperson'}
-					<td class="text-left" 
-						>
-						{#if row.groupingLevel > 1}
+				{:else if column !== 'quantity' && column !== 'total' && column !== 'invoice_id'}
+					<td
+						class="text-left"
+						class:font-bold={column === filterByColumn}
+						class:font-light={column !== filterByColumn}
+					>
+						{#if row.groupingLevel !== 0 && !((row.groupingLevel === 1 || row.groupingLevel === 2 || row.groupingLevel === 3) && column === filterByColumn && filterByColumnValue !== '')}
 							<a
 								href={`/${column}/${sanitize(row[column] ?? '')}`}
 								class="text-gray-800 underline hover:no-underline">{row[column] ?? ''}</a
@@ -52,7 +63,7 @@
 						/>
 					</td>
 				{:else if column === 'total'}
-					<td class="text-right border-r">
+					<td class={`text-right border-r ${column} whitespace-nowrap`}>
 						{#if row.groupingLevel < 1}
 							<span
 								class="
@@ -79,32 +90,25 @@
 	}
 
 	tr > td:first-child {
-		text-align: left;
+		/* text-align: left; */
 	}
 	tr > td:last-child {
 		text-align: right;
 	}
 
 	tr > td:nth-child(2) {
-		text-align: left;
-		padding-left:1.2rem;
+		/* text-align: left; */
+		padding-left: 1.2rem;
 	}
-
-	/* tr > td:first-child {
-		text-align: left;
-	}	 */
 
 	tr.group-0 > td,
 	tr.group-1 > td,
-	
-	tr.group-3 > td {
+	tr.group-4 > td:nth-child(2) {
+		text-align: left;
 		/* border: none; */
 		/* font-weight: bold; */
 	}
-
-	.group-2 > td:first-child {
-		text-align: left !important;
-
-		
+	.total {
+		text-align: right !important;
 	}
 </style>

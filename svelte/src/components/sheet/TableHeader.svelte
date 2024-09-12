@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Selectable from './ColumnFilter.svelte';
 	export let columns: string[] = [];
+	export let filterByColumn: string = '';
 	
 
 </script>
@@ -8,9 +9,13 @@
 <thead class="uppercase  sticky top-0 bg-white shadow-md  z-30">
 	<tr class="">
 		{#each $columns as column}
-			<th class="text-left justify-between font-light whitespace-nowrap">
-				<div class="p-2 uppercase">{column.replace(/_/g, ' ')}</div>
-				
+			<th class="text-left justify-between whitespace-nowrap"
+			class:font-bold={column === filterByColumn}
+			class:font-light={column !== filterByColumn}
+
+			>
+				<div class="p-2 uppercase"
+				>{column.replace(/_/g, ' ')}</div>
 			</th>
 		{/each}
 	</tr>
@@ -38,7 +43,4 @@
 		width: 10vw
 
 	}
-	/* thead > tr > th:first-child {
-		border-left: 1px solid rgba(229, 231, 235, 1);
-	} */
 </style>
