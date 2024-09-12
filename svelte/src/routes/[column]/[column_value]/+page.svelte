@@ -11,7 +11,7 @@
 
 <div class="container mx-auto my-4 mb-12 mt-12 flex flex-col gap-4">
   <div>
-	<h1 class="text-6xl capitalize">{column_value.replace('+',' ')}</h1>
+	<h1 class="text-3xl capitalize">{column_value.replace('+',' ')}</h1>
 	<p class="text-gray-500">
 	
    <span class=" capitalize">{column}</span> 

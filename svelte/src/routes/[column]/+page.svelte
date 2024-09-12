@@ -24,7 +24,7 @@
 <!-- Since we're in a route lets set the grouping level to the all data -->
 
 <div class="container mx-auto my-4 mb-12 mt-12">
-	<h1 class="text-4xl">Column View</h1>
+	<h1 class="text-3xl">Column View</h1>
 	<p class="text-gray-500">
 	View all the values of a single column, in this case <b>{column}</b>
 	</p>

@@ -39,7 +39,8 @@
 						{#if row.groupingLevel !== 0 && !((row.groupingLevel === 1 || row.groupingLevel === 2 || row.groupingLevel === 3) && column === filterByColumn && filterByColumnValue !== '')}
 							<a
 								href={`/${column}/${sanitize(row[column] ?? '')}`}
-								class="whitespace-nowrap text-gray-800 underline hover:no-underline">{row[column] ?? ''}</a
+								class="whitespace-nowrap text-gray-800 underline hover:no-underline"
+								>{row[column] ?? ''}</a
 							>
 						{/if}
 					</td>
@@ -90,12 +91,12 @@
 	}
 
 	tr:last-child {
-	position: sticky;
-	bottom: 0;
-	background-color: #fff;
-	font-weight:500;
+		position: sticky;
+		bottom: 0;
+		background-color: #fff;
+		font-weight: 500;
 
-	box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.05);
+		box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.05);
 	}
 
 	tr:last-child > td {
@@ -113,59 +114,14 @@
 	td.total {
 		text-align: right;
 	}
-	td.customer, td.salesperson {
+	td.customer,
+	td.salesperson {
 		text-align: center;
 		width: 15vw;
 	}
 
-	td:first-child.customer, td:first-child.salesperson {
+	td:first-child.customer,
+	td:first-child.salesperson {
 		text-align: left;
 	}
-	
 </style>
-<!-- tr > td {
-	border: 1px solid #ededf4;
-	padding: 0.75rem;
-	text-align: center;
-}
-
-tr:last-child {
-	position: sticky;
-	bottom: 0;
-	box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.05);
-	
-}
-tr:last-child > td {
-	background-color: #fff;
-	border: none;
-	padding: 1rem;
-}
-
-tr > td:first-child {
-	text-align: left;
-}
-
-tr > td.invoice_id {
-	text-align: center;
-}
-
-tr > td:last-child {
-	text-align: right;
-	
-}
-
-tr > td:nth-child(2) {
-	/* text-align: left; */
-	padding-left: 1.2rem;
-}
-
-tr.group-0 > td,
-tr.group-1 > td,
-tr.group-4 > td:nth-child(2) {
-	text-align: left;
-}
-.total {
-	text-align: right !important;
-	max-width: 200px !important; 
-	
-} -->
