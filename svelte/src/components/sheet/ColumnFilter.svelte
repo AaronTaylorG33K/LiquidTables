@@ -1,13 +1,5 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import {
-		selectedProduct,
-		selectedCustomer,
-		selectedSalesperson,
-		filterByProduct,
-		filterByCustomer,
-		filterBySalesperson
-	} from '../../lib/filtering';
 	import { get } from 'svelte/store';
 
 	export let options: string[] = [];
@@ -22,13 +14,13 @@
 	function selectOption(option: string) {
 		switch (type) {
 			case 'product':
-				filterByProduct(option);
+				// filterByProduct(option);
 				break;
 			case 'customer':
-				filterByCustomer(option);
+				// filterByCustomer(option);
 				break;
 			case 'salesperson':
-				filterBySalesperson(option);
+				// filterBySalesperson(option);
 				break;
 		}
 		selected = option;

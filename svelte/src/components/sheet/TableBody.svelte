@@ -1,17 +1,20 @@
-<!-- TableBody.svelte -->
 <script lang="ts">
-	import { formatMoney } from '../../lib/format';
-	import {
-		filteredData,
-		filterByProduct,
-		filterByCustomer,
-		filterBySalesperson,
-		show_id,
-		selectedProduct,
-		selectedCustomer,
-		selectedSalesperson
-	} from '../../lib/filtering';
+	import { formatMoney, sanitize, reString } from '../../lib/format';
 	import { sendMessage } from '../../lib/websocket';
+	import type { Metrics } from '../../types/metrics';
+
+	import { get } from 'svelte/store';
+
+	export let filteredData: Metrics[] = [];
+	export let columns: string[] = [];
+	export let filterByColumn: string = '';
+	export let filterByColumnValue: string = '';
+
+	const colConfig = [
+		{ type: 'invoice_id', input: '' },
+		{ type: 'total', input: '' }
+	];
+
 
 	function qtyChange(event: Event, row: { invoice_id: number; quantity: number }) {
 		const target = event.target as HTMLInputElement;
@@ -21,127 +24,91 @@
 </script>
 
 <tbody>
-	{#each $filteredData as { invoice_id, quantity, groupingLevel: level, product, customer, salesperson, amount }, index}
-		<tr
-			class={`p-4 group-${level} index-${index} last:font-bold  odd:bg-gray-50  border [&>td]:border-t [&>td]:border-l`}
-			class:selected={$selectedProduct === product && level !== 0}
-		>
-
-			{#if $selectedProduct && $selectedProduct === product && level === 1}
-				<td class="text-center font-light" width="5%">ID</td>
-			
-			{/if}
-			{#if $show_id && level > 3}
-				<td class="text-center" width="5%">{invoice_id}</td>
-			{/if}
-
-			{#if product}
-				<td width="40%" 
-				colspan={$selectedProduct && level === 1 ? $selectedProduct === product ? 4:5 : 1}>
-					<button
-						on:click={() => filterByProduct(product)}
-						class="underline hover:no-underline hover:text-blue-500 cursor-pointer"
-						class:font-bold={$selectedProduct === product && level === 1}
-						
+	{#each $filteredData as row, index}
+		<tr class={`p-4 group-${row.groupingLevel} index-${index}  odd:bg-gray-50 `}>
+			{#each $columns as column}
+				{#if column === 'amount'}
+					<td width="2%" class={`text-right border-r ${column}`}>
+						{formatMoney(Number(row[column])) ?? ''}
+					</td>
+				{:else if column !== 'quantity' && column !== 'total' && column !== 'invoice_id'}
+					<td
+						class="text-left"
+						class:font-bold={column === filterByColumn}
+						class:font-light={column !== filterByColumn}
 					>
-						{product && (level === 1 || level === 2) ? product : product}
-						{level > 3 ? ` Case @ ${formatMoney(amount / quantity)}` : ''}
-					</button>
-				</td>
-			{/if}
-
-			{#if customer}
-				<td
-					width="15%"
-					class='text-center'
-					class:selected={$selectedCustomer}
-					colspan={$selectedCustomer && level === 2 ? 5 : 1}
-				>
-					<button
-						on:click|preventDefault={() => filterByCustomer(customer)}
-						class="underline hover:no-underline hover:text-blue-500 cursor-pointer"
-						>{(product && customer) ?? ''}</button
-					>
-				</td>
-			{/if}
-
-			{#if salesperson}
-				<td
-					width="15%"
-					class='text-center'
-					class:selected={$selectedSalesperson}
-					colspan={$selectedSalesperson && level === 3 ? 5 : 1}
-				>
-					<button
-						on:click|preventDefault={() => filterBySalesperson(salesperson)}
-						class="cursor-pointer underline hover:no-underline hover:text-blue-500 hover:cursor-pointer"
-						>{salesperson && level !== 3 ? salesperson : ''}</button
-					>
-				</td>
-			{/if}
-
-			{#if level > 3 && (salesperson || customer || product)}
-				<td class="text-center p-0" width="10%">
-					<input
-						class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none placeholder-gray-400"
-						type="number"
-						placeholder="1"
-						value={quantity}
-						on:input={(event) => qtyChange(event, { invoice_id, quantity })}
-					/>
-				</td>
-			{/if}
-
-			<td
-				width="5%"
-				class={`text-right border-r`}
-				class:font-bold={$selectedProduct === product && level === 1}
-				colspan={level === 0 ? 6 : 1}
-				>{formatMoney(Number(amount)) ?? ''}
-			</td>
+						{#if row.groupingLevel !== 0 && !((row.groupingLevel === 1 || row.groupingLevel === 2 || row.groupingLevel === 3) && column === filterByColumn && filterByColumnValue !== '')}
+							<a
+								href={`/${column}/${sanitize(row[column] ?? '')}`}
+								class="text-gray-800 underline hover:no-underline">{row[column] ?? ''}</a
+							>
+						{/if}
+					</td>
+				{:else if column === 'invoice_id'}
+					<td class="text-left">
+						<a
+							href={`/${column.replace('_id', '')}/${row[column]}`}
+							class="text-gray-800 underline hover:no-underline">{row[column] ?? ''}</a
+						>
+					</td>
+				{:else if column === 'quantity' && row.groupingLevel === 4}
+					<td class="text-center p-0" width="10%">
+						<input
+							class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none placeholder-gray-400"
+							type="number"
+							placeholder="1"
+							value={row.quantity}
+							on:input={(event) =>
+								qtyChange(event, { invoice_id: row.invoice_id, quantity: row.quantity })}
+						/>
+					</td>
+				{:else if column === 'total'}
+					<td class={`text-right border-r ${column} whitespace-nowrap`}>
+						{#if row.groupingLevel < 1}
+							<span
+								class="
+						text-gray-400 font-light mr-2">Total</span
+							>
+						{/if}
+						{formatMoney(Number(row[column])) ?? ''}
+					</td>
+				{:else}
+					<td class="text-left">
+						{row[column] ?? ''}
+					</td>
+				{/if}
+			{/each}
 		</tr>
 	{/each}
 </tbody>
 
 <style>
-	.selected {
-		background-color: #eef8fe;
-		transition: background-color 0.3s ease;
+	tr > td {
+		border: 1px solid #ededf4;
+		padding: 0.75rem;
+		text-align: center;
 	}
 
-	.selected.group-1 {
-		box-shadow: 0px 0px 7px 4px rgba(0, 0, 0, 0.05);
-		position: relative;
-		/* z-index: 2; */
-		border-bottom: 1px solid #ccc;
+	tr > td:first-child {
+		/* text-align: left; */
 	}
-	.selected.group-1 > td {
-		border-top: 1px solid #ccc;
-		border-bottom: 1px solid #ccc;
-		background-color: #fff;
+	tr > td:last-child {
+		text-align: right;
 	}
 
-	.selected > td {
-		border-color: #e5e7eb;
+	tr > td:nth-child(2) {
+		/* text-align: left; */
+		padding-left: 1.2rem;
 	}
 
-	.selected.group-2 > td {
-		border-top: 1px solid #e5e7eb;
-		border-bottom: 1px solid #e5e7eb;
+	tr.group-0 > td,
+	tr.group-1 > td,
+	tr.group-4 > td:nth-child(2) {
+		text-align: left;
+		/* border: none; */
+		/* font-weight: bold; */
 	}
-	.selected.group-4 > td {
-		border-top: none;
-		border-bottom: 1px solid #e5e7eb;
-	}
-
-	td.selected {
-		border-color: #e5e7eb;
-	}
-
-	td {
-		padding: 1rem;
-	}
-	.tr.selected > td:first-child {
-		border-top: 1px solid rgb(30, 116, 170);
+	.total {
+		text-align: right !important;
 	}
 </style>
