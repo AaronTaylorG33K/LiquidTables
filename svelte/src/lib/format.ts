@@ -2,6 +2,9 @@ import type { Metrics } from '../types/metrics';
 
 
 export function sanitize(str: string): string {
+    if (typeof str !== 'string') {
+        return '';
+    }
     return str.replace(/ /g, '+').toLowerCase();
 }
 

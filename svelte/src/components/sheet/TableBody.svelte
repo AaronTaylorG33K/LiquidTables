@@ -78,6 +78,9 @@
 		text-align: center;
 	}
 
+	tr > td:first-child {
+		text-align: left;
+	}
 	tr > td:last-child {
 		text-align: right;
 	}
@@ -93,9 +96,15 @@
 
 	tr.group-0 > td,
 	tr.group-1 > td,
-	tr.group-2 > td,
+	
 	tr.group-3 > td {
-		border: none;
-		font-weight: bold;
+		/* border: none; */
+		/* font-weight: bold; */
+	}
+
+	.group-2 > td:first-child {
+		text-align: left !important;
+
+		
 	}
 </style>
