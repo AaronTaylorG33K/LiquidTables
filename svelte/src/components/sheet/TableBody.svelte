@@ -1,16 +1,15 @@
 <script lang="ts">
-	import { formatMoney } from '../../lib/format';
+	import { formatMoney, sanitize, reString } from '../../lib/format';
 	import { sendMessage } from '../../lib/websocket';
 	import type { Metrics } from '../../types/metrics';
+
+
 	import { get } from 'svelte/store';
 
 	export let filteredData: Metrics[] = [];
 	export let columns: string[] = [];
 
-	// console.log({filteredData});
-    function sanitize(str: string): string {
-        return str.replace(/ /g, '+');
-    }
+
 
 	function qtyChange(event: Event, row: { invoice_id: number; quantity: number }) {
 		const target = event.target as HTMLInputElement;

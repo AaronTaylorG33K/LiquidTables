@@ -1,12 +1,12 @@
 <script lang="ts">
-
-  import { page } from '$app/stores';
-  let { column, column_value } = $page.params;
+	import { page } from '$app/stores';
+	let { column, column_value } = $page.params;
 	import LiquidTables from '../../../components/LiquidTables.svelte';
+	$: ({ column, column_value } = $page.params);
+	$: filterByColumn = column === 'invoice' ? 'invoice_id' : column;
 </script>
 
-<!--- the tables are controllable by passing them an array of the groupin_lists you want to display-->
-
-<div class="border-t-2 border-gray-800 ">
-     <LiquidTables groupingLevels={[0,4]} />
+<!-- Since we're in a route lets set the grouping level to the all data -->
+<div class="border-t-2 border-gray-800">
+	<LiquidTables groupingLevels={[0, 4]} {filterByColumn} filterByColumnValue={column_value} />
 </div>

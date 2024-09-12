@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { onMount, createEventDispatcher } from 'svelte';
+	import { get } from 'svelte/store';
+	import { page } from '$app/stores';
 	import { writable } from 'svelte/store';
 	import { metricsStore } from '../store/metrics';
 	import { filterData } from '../lib/filtering';
@@ -12,6 +14,9 @@
 	export let groupingLevels: number[] = [];
 	export const columns = writable<string[]>([]);
 
+	export let filterByColumn: string = '';
+	export let filterByColumnValue: string = '';
+
 	// prevent certain columns from showing
 	let notColumns = ['customer_id', 'salesperson_id'];
 
@@ -22,11 +27,12 @@
 		const keys = Object.keys(data[0]);
 		return keys.filter((key) => key !== 'groupingLevel' && data.some((row) => row[key] !== null));
 	}
+
 	function applyFilter() {
 		metricsStore.subscribe((metrics: Partial<Metrics>[]) => {
 			if (Array.isArray(metrics)) {
-				const formattedMetrics = formatData(metrics);
-				const filtered = filterData(formattedMetrics, groupingLevels);
+				let formattedMetrics = formatData(metrics);
+				const filtered = filterData(formattedMetrics, groupingLevels, filterByColumn, filterByColumnValue);
 				filteredData.set(filtered);
 				let column_keys = getColumns(filtered);
 				column_keys = getColumns(filtered).filter((key) => !notColumns.includes(key));
@@ -45,10 +51,13 @@
 		});
 	}
 
-	onMount(() => {
-		applyFilter();
-		// console.log('LiquidTables mounted', $filteredData);
-	});
+
+	$: {
+        const { params } = $page;
+        const filterByColumn = params.column as keyof Metrics;
+        const filterByColumnValue = params.column_value;
+        applyFilter(filterByColumn, filterByColumnValue);
+    }
 </script>
 
 <!-- <SearchBar /> in development -->

@@ -1,5 +1,14 @@
 import type { Metrics } from '../types/metrics';
 
+
+export function sanitize(str: string): string {
+    return str.replace(/ /g, '+').toLowerCase();
+}
+
+export function reString(str: string): string {
+    return str.replace(/\+/g, ' ');
+    
+}
 export function formatMoney(value: number): string {
     const formatter = new Intl.NumberFormat('en-US', {
         style: 'currency',

@@ -1,17 +1,20 @@
-import { writable } from 'svelte/store';
 import type { Metrics } from '../types/metrics';
+import { writable } from 'svelte/store';
 
 export const data = writable<Metrics[]>([]);
-export const groupingLevels = writable<number[]>([0,1]);
+export const groupingLevels = writable<number[]>([0, 1]);
 
+export function filterData(metrics: Metrics[], groupingLevels: number[], filterByColumn?: keyof Metrics, filterByColumnValue?: string): Metrics[] {
+  const filterValue = filterByColumnValue ? filterByColumnValue.replace('+', ' ').trim().toLowerCase() : null;
 
-export function filterData(metrics: Metrics[], groupingLevels: number[]): Metrics[] {
-  let grouped: Metrics[] = [];
-  groupingLevels.forEach((level) => {
-      const groupedLevel = metrics.filter((metric) => metric.groupingLevel === level);
-      grouped = grouped.concat(groupedLevel);
+  return metrics.filter((metric) => {
+      const matchesColumnFilter = filterByColumn && filterValue
+          ? String(metric[filterByColumn]).trim().toLowerCase() === filterValue
+          : true;
+
+      const matchesGroupingLevel = groupingLevels.includes(metric.groupingLevel);
+
+      return matchesColumnFilter && matchesGroupingLevel;
   });
-  return grouped;
 }
-
 
