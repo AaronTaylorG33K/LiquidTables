@@ -44,7 +44,7 @@
 						{/if}
 					</td>
 				{:else if column === 'invoice_id'}
-					<td class="text-center">
+					<td class="text-center invoice_id">
 						<a
 							href={`/${column.replace('_id', '')}/${row[column]}`}
 							class="text-gray-800 underline hover:no-underline text-center w-full"
@@ -92,7 +92,8 @@
 	tr:last-child {
 		position: sticky;
 		bottom: 0;
-		box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.1);
+		box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.05);
+		
 	}
 	tr:last-child > td {
 		background-color: #fff;
@@ -103,6 +104,11 @@
 	tr > td:first-child {
 		text-align: left;
 	}
+
+	tr > td.invoice_id {
+		text-align: center;
+	}
+
 	tr > td:last-child {
 		text-align: right;
 	}
@@ -122,4 +128,5 @@
 	.total {
 		text-align: right !important;
 	}
+	
 </style>

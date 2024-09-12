@@ -71,24 +71,3 @@
 		<TableBody {filteredData} {columns} {filterByColumn} {filterByColumnValue} />
 	</table>
 {/if}
-
-<style>
-	.w-full {
-		width: 100%;
-	}
-	.border-b {
-
-		position:relative;
-		z-index: 0;
-		border-bottom: 1px solid #e5e7eb; /* Tailwind's border-gray-200 */
-	}
-	.border-separate {
-		border-collapse: separate;
-	}
-	.border-spacing-0 {
-		border-spacing: 0;
-	}
-	.overflow-y-auto {
-		overflow-y: auto;
-	}
-</style>

@@ -17,6 +17,10 @@
 						<a href={`/${column}/`} class="text-gray-800 underline hover:no-underline">
 							{column.replace(/_/g, ' ')}
 						</a>
+					{:else if column === 'invoice_id'}
+						<a href={`../`} class="text-gray-800 underline hover:no-underline">
+							{column.replace(/_/g, ' ')}
+						</a>
 					{:else}
 						{column.replace(/_/g, ' ')}
 					{/if}
