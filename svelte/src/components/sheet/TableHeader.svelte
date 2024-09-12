@@ -9,8 +9,8 @@
 	<tr class="">
 		{#each $columns as column}
 			<th class="text-left justify-between font-light whitespace-nowrap">
-				<div class="p-2 pl-4 uppercase">{column.replace(/_/g, ' ')}</div>
-				<div class="pl-2"></div>
+				<div class="p-2 uppercase">{column.replace(/_/g, ' ')}</div>
+				
 			</th>
 		{/each}
 	</tr>
@@ -18,13 +18,24 @@
 
 <style>
 	tr > th {
-		border:none
+		border:none;
+		text-align: center;
+	}
+	tr > th:first-child {
+		text-align: center;
+		width:10vw;
+	}
+	tr > th:nth-child(2) {
+		width: 40vw;
+		text-align:left;
 	}
 	tr > th {
 		padding:0.75rem;
 	}
+
 	tr > th:last-child {
 		text-align: right;
+		width: 10vw
 
 	}
 	/* thead > tr > th:first-child {
