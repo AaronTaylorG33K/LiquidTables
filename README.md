@@ -2,6 +2,8 @@
 
 LiquidTables is a project that combines FastAPI, Svelte, and DuckDB for fast and efficient data handling.
 
+I have also included Tailwind within this project as it allows me to shorthand a lot of unecessary css. 
+
 ## REUSABLE `main`
 <img width="803" alt="Screenshot 2024-09-12 at 10 40 19 AM" src="https://github.com/user-attachments/assets/ec835bdf-98fa-450c-b61f-b47cc00ff542">
 
