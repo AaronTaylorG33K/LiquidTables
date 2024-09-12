@@ -8,7 +8,7 @@
 	<tr>
 		{#each $columns as column}
 			<th
-				class={`whitespace-nowrap ${column}`}
+				class={`whitespace-nowrap p-4 ${column}`}
 				class:font-bold={column === filterByColumn}
 				class:font-light={column !== filterByColumn}
 			>
@@ -31,35 +31,21 @@
 </thead>
 
 <style>
-	tr > th {
-		border: none;
-		text-align: center;
-		
-		
-	}
-	tr > th:first-child {
+	th.product {
 		text-align: left;
-		width: 10vw;
-	}
-	tr > th:nth-child(2) {
 		width: 40vw;
-		text-align: left;
 	}
-	tr > th {
-		padding: 1rem;
-	}
-
-	tr > th:last-child {
-		text-align: right;
-		width: 10vw;
-	}
-
-	th {
-		padding:2rem;
-	}
-
 	th.total {
 		text-align: right;
+	}
+	th.invoice_id {
+		text-align: center;
+	}
+
+	th:first-child.customer,
+	th:first-child.salesperson {
+		text-align: left;
+		width: 40vw;
 	}
 	
 </style>
