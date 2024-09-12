@@ -2,6 +2,7 @@ import { writable, type Writable } from 'svelte/store';
 import { data } from './filtering';
 import { metricsStore } from '../store/metrics';
 import type { Metrics } from '../types/metrics';
+import { formatData } from './format';
 
 let ws: WebSocket | null = null;
 const retryInterval = 10000; // 10 seconds
@@ -85,24 +86,39 @@ export function getConnectionStatus() {
 	return status;
 }
 
-metricsStore.subscribe((metrics: Partial<Metrics>) => {
-    if (Array.isArray(metrics)) {
-        const formattedMetrics = metrics.map(
-            (metric: [string, string, string, number, number, number, number, number, number]) => ({
-                product: metric[0],
-                customer: metric[1],
-                salesperson: metric[2],
-                invoice_id: metric[3],
-                customer_id: metric[4],
-                salesperson_id: metric[5],
-                quantity: metric[6],
-                amount: metric[7],
-                groupingLevel: metric[8]
-            })
-        );
-        data.set(formattedMetrics);
-    }
+
+// export function formatData(metrics: (Partial<Metrics> | [string, string, string, number, number, number, number, number, number])[]): Metrics[] {
+//     if (Array.isArray(metrics)) {
+//         return metrics.map(
+//             (metric: Partial<Metrics> | [string, string, string, number, number, number, number, number, number]) => {
+//                 if (Array.isArray(metric)) {
+//                     return {
+//                         product: metric[0],
+//                         customer: metric[1],
+//                         salesperson: metric[2],
+//                         invoice_id: metric[3],
+//                         customer_id: metric[4],
+//                         salesperson_id: metric[5],
+//                         quantity: metric[6],
+//                         amount: metric[7],
+//                         groupingLevel: metric[8]
+//                     };
+//                 } else {
+//                     return metric as Metrics;
+//                 }
+//             }
+//         );
+//     } else {
+//         console.error('metrics is not an array:', metrics);
+//         return [];
+//     }
+// }
+
+metricsStore.subscribe((metrics: (Partial<Metrics> | [string, string, string, number, number, number, number, number, number])[]) => {
+    const formattedMetrics = formatData(metrics);
+    data.set(formattedMetrics);
 });
+
 
 
 initializeWebSocket();

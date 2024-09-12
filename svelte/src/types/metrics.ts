@@ -10,8 +10,8 @@ export class Metrics {
 		public invoice_id: number,
 		public customer_id: number,
 		public salesperson_id: number,
-		public quantity: number,
 		public amount: number,
+		public total: number,
 		public groupingLevel: number,
 	) {}
 

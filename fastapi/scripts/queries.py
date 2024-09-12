@@ -1,9 +1,9 @@
 query = """
         SELECT 
+            invoice.invoice_id AS invoice_id,
             product.product_name AS product,
             customer.customer_name AS customer,
             salesperson.salesperson_name AS salesperson,
-            invoice.invoice_id AS invoice_id,
             customer.customer_id AS customer_id,
             salesperson.salesperson_id AS salesperson_id,
             invoice.product_quantity AS quantity,

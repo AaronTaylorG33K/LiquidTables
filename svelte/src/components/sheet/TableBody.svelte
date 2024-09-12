@@ -1,17 +1,13 @@
-<!-- TableBody.svelte -->
 <script lang="ts">
 	import { formatMoney } from '../../lib/format';
-	import {
-		filteredData,
-		filterByProduct,
-		filterByCustomer,
-		filterBySalesperson,
-		show_id,
-		selectedProduct,
-		selectedCustomer,
-		selectedSalesperson
-	} from '../../lib/filtering';
 	import { sendMessage } from '../../lib/websocket';
+	import type { Metrics } from '../../types/metrics';
+	import { get } from 'svelte/store';
+
+	export let filteredData: Metrics[] = [];
+	export let columns: string[] = [];
+
+	// console.log({filteredData});
 
 	function qtyChange(event: Event, row: { invoice_id: number; quantity: number }) {
 		const target = event.target as HTMLInputElement;
@@ -21,127 +17,49 @@
 </script>
 
 <tbody>
-	{#each $filteredData as { invoice_id, quantity, groupingLevel: level, product, customer, salesperson, amount }, index}
-		<tr
-			class={`p-4 group-${level} index-${index} last:font-bold  odd:bg-gray-50  border [&>td]:border-t [&>td]:border-l`}
-			class:selected={$selectedProduct === product && level !== 0}
-		>
-
-			{#if $selectedProduct && $selectedProduct === product && level === 1}
-				<td class="text-center font-light" width="5%">ID</td>
-			
-			{/if}
-			{#if $show_id && level > 3}
-				<td class="text-center" width="5%">{invoice_id}</td>
-			{/if}
-
-			{#if product}
-				<td width="40%" 
-				colspan={$selectedProduct && level === 1 ? $selectedProduct === product ? 4:5 : 1}>
-					<button
-						on:click={() => filterByProduct(product)}
-						class="underline hover:no-underline hover:text-blue-500 cursor-pointer"
-						class:font-bold={$selectedProduct === product && level === 1}
-						
-					>
-						{product && (level === 1 || level === 2) ? product : product}
-						{level > 3 ? ` Case @ ${formatMoney(amount / quantity)}` : ''}
-					</button>
-				</td>
-			{/if}
-
-			{#if customer}
-				<td
-					width="15%"
-					class='text-center'
-					class:selected={$selectedCustomer}
-					colspan={$selectedCustomer && level === 2 ? 5 : 1}
-				>
-					<button
-						on:click|preventDefault={() => filterByCustomer(customer)}
-						class="underline hover:no-underline hover:text-blue-500 cursor-pointer"
-						>{(product && customer) ?? ''}</button
-					>
-				</td>
-			{/if}
-
-			{#if salesperson}
-				<td
-					width="15%"
-					class='text-center'
-					class:selected={$selectedSalesperson}
-					colspan={$selectedSalesperson && level === 3 ? 5 : 1}
-				>
-					<button
-						on:click|preventDefault={() => filterBySalesperson(salesperson)}
-						class="cursor-pointer underline hover:no-underline hover:text-blue-500 hover:cursor-pointer"
-						>{salesperson && level !== 3 ? salesperson : ''}</button
-					>
-				</td>
-			{/if}
-
-			{#if level > 3 && (salesperson || customer || product)}
-				<td class="text-center p-0" width="10%">
-					<input
-						class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none placeholder-gray-400"
-						type="number"
-						placeholder="1"
-						value={quantity}
-						on:input={(event) => qtyChange(event, { invoice_id, quantity })}
-					/>
-				</td>
-			{/if}
-
-			<td
-				width="5%"
-				class={`text-right border-r`}
-				class:font-bold={$selectedProduct === product && level === 1}
-				colspan={level === 0 ? 6 : 1}
-				>{formatMoney(Number(amount)) ?? ''}
-			</td>
+	{#each $filteredData as row, index}
+		<tr class={`p-4 group-${row.groupingLevel} index-${index} last:font-bold  odd:bg-gray-50 `}>
+			{#each $columns as column}
+				{#if column === 'amount'}
+					<td width="5%" class="text-right border-r">
+						{formatMoney(Number(row[column])) ?? ''}
+					</td>
+				{:else if column === 'quantity'  && row.groupingLevel !== 0}
+					<td class="text-center p-0" width="10%">
+						<input
+							class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none placeholder-gray-400"
+							type="number"
+							placeholder="1"
+							value={row.quantity}
+							on:input={(event) =>
+								qtyChange(event, { invoice_id: row.invoice_id, quantity: row.quantity })}
+						/>
+					</td>
+				{:else if (column === 'total')}
+					<td class="text-right border-r">
+						{formatMoney(Number(row[column])) ?? ''}
+					</td>
+				{:else}
+					<td class="text-left">
+						{row[column] ?? ''}
+					</td>
+				{/if}
+			{/each}
 		</tr>
 	{/each}
 </tbody>
 
 <style>
-	.selected {
-		background-color: #eef8fe;
-		transition: background-color 0.3s ease;
-	}
 
-	.selected.group-1 {
-		box-shadow: 0px 0px 7px 4px rgba(0, 0, 0, 0.05);
-		position: relative;
-		/* z-index: 2; */
-		border-bottom: 1px solid #ccc;
-	}
-	.selected.group-1 > td {
-		border-top: 1px solid #ccc;
-		border-bottom: 1px solid #ccc;
-		background-color: #fff;
-	}
-
-	.selected > td {
-		border-color: #e5e7eb;
-	}
-
-	.selected.group-2 > td {
-		border-top: 1px solid #e5e7eb;
-		border-bottom: 1px solid #e5e7eb;
-	}
-	.selected.group-4 > td {
-		border-top: none;
-		border-bottom: 1px solid #e5e7eb;
-	}
-
-	td.selected {
-		border-color: #e5e7eb;
-	}
-
-	td {
+	tr > td {
+		border: 1px solid #ededf4;
 		padding: 1rem;
 	}
-	.tr.selected > td:first-child {
-		border-top: 1px solid rgb(30, 116, 170);
+
+	tr.group-0 > td {
+		border: none;
 	}
+
+
+
 </style>
