@@ -2,20 +2,18 @@
 
 LiquidTables is a project that combines FastAPI, Svelte, and DuckDB for fast and efficient data handling.
 
-## REFACTOR IN THE WORKS ON BRANCH `refactoring for reusability`
-
-The new one is based on being a re-usable component that builds its columns and rows ambigiously. This one also resembles a classic spreadsheet a bit better. Much better code than on `main`
-<img width="1056" alt="Screenshot 2024-09-11 at 9 05 28 PM" src="https://github.com/user-attachments/assets/56516d5f-f7ef-4d1e-83c3-6f808f05d57f">
+## REUSABLE `main`
+<img width="803" alt="Screenshot 2024-09-12 at 10 40 19 AM" src="https://github.com/user-attachments/assets/ec835bdf-98fa-450c-b61f-b47cc00ff542">
 
 
 
+## PROTOTYPE BUILD 
 
-
-## PROTOTYPE BUILD `main`
+**Located on branch `prototype`**
 
 This was not done with any sort of best practice in mind when building the front end, it was a rapid prototype for proof of concept. This currently supports bidirectional websocket communication.
 
-<img width="925" alt="Screenshot 2024-09-10 at 2 33 36 PM" src="https://github.com/user-attachments/assets/af9f9fa9-2e98-4ae1-adee-a0e626777275">
+<img width="425" alt="Screenshot 2024-09-10 at 2 33 36 PM" src="https://github.com/user-attachments/assets/af9f9fa9-2e98-4ae1-adee-a0e626777275">
 
 ## Prerequesites
 
