@@ -9,7 +9,7 @@
 	import type { Metrics } from '../types/metrics';
 
 	export const filteredData = writable<Metrics[]>([]);
-	export let groupingLevels = writable<number[]>([0, 1]);
+	export let groupingLevels: number[] = [];
 	export const columns = writable<string[]>([]);
 
 	// prevent certain columns from showing

@@ -8,6 +8,9 @@
 	export let columns: string[] = [];
 
 	// console.log({filteredData});
+    function sanitize(str: string): string {
+        return str.replace(/ /g, '+');
+    }
 
 	function qtyChange(event: Event, row: { invoice_id: number; quantity: number }) {
 		const target = event.target as HTMLInputElement;
@@ -19,11 +22,25 @@
 <tbody>
 	{#each $filteredData as row, index}
 		<tr class={`p-4 group-${row.groupingLevel} index-${index} last:font-bold  odd:bg-gray-50 `}>
+			
 			{#each $columns as column}
 				{#if column === 'amount'}
 					<td width="5%" class="text-right border-r">
 						{formatMoney(Number(row[column])) ?? ''}
 					</td>
+				{:else if column === 'customer' || column === 'product' || column === 'salesperson' }
+					<td class="text-left">
+						<a href={`/${column}/${sanitize(row[column] ?? '')}`}
+						class="text-gray-800 underline hover:no-underline"
+						>{row[column]}</a>
+					</td>
+
+				{:else if column === 'invoice_id'}
+				<td class="text-left">
+					<a href={`/${column.replace('_id','')}/${row[column]}`}
+					class="text-gray-800 underline hover:no-underline"
+					>{row[column]}</a>
+				</td>
 				{:else if column === 'quantity'  && row.groupingLevel !== 0}
 					<td class="text-center p-0" width="10%">
 						<input
