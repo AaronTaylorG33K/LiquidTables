@@ -9,7 +9,8 @@
 
 
 
-<div class="container mx-auto my-4 mb-12 mt-12">
+<div class="container mx-auto my-4 mb-12 mt-12 flex flex-col gap-4">
+  <div>
 	<h1 class="text-4xl">Filtered Column View</h1>
 	<p class="text-gray-500">
 	
@@ -20,4 +21,19 @@
 			<LiquidTables groupingLevels={[1, 2, 3, 4, 5]} {filterByColumn} filterByColumnValue={column_value} />
 		</div>
 	</div>
+
+</div>
+<div class="flex flex-row gap-4">
+	
+	<div class="w-1/3 h-[40vh] overflow-auto border border-gray-200">
+		<LiquidTables groupingLevels={[0, 1]} />
+	</div>
+	<div class="w-1/3  h-[40vh] overflow-auto border border-gray-200 ">
+		<LiquidTables groupingLevels={[0, 2]} />
+	</div>
+	<div class="w-1/3 h-[40vh] overflow-auto border border-gray-200">
+		<LiquidTables groupingLevels={[0, 3]} />
+	</div>
+	
+</div>
 </div>

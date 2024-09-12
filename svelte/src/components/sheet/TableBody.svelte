@@ -127,6 +127,7 @@
 	}
 	.total {
 		text-align: right !important;
+		max-width: 200px !important; 
 	}
 	
 </style>

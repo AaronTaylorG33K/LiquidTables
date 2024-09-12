@@ -5,27 +5,26 @@
 </script>
 
 <thead class="uppercase sticky top-0 bg-white shadow-md z-30">
-	<tr class="">
+	<tr>
 		{#each $columns as column}
 			<th
-				class="text-left justify-between whitespace-nowrap"
+				class={`whitespace-nowrap ${column}`}
 				class:font-bold={column === filterByColumn}
 				class:font-light={column !== filterByColumn}
 			>
-				<div class="p-2 uppercase flex justify-between items-center gap-4">
+				
 					{#if column !== 'invoice_id' && column !== 'total' && column !== 'quantity'}
 						<a href={`/${column}/`} class="text-gray-800 underline hover:no-underline">
 							{column.replace(/_/g, ' ')}
 						</a> 
 
 					{:else if column === 'invoice_id'}
-						<a href={`../`} class="text-gray-800 underline hover:no-underline">
+						<a href={`../`} class="p- text-gray-800 underline hover:no-underline text-center">
 							{column.replace(/_/g, ' ')}
 						</a>
 					{:else}
 						{column.replace(/_/g, ' ')}
 					{/if}
-				</div>
 			</th>
 		{/each}
 	</tr>
@@ -35,6 +34,8 @@
 	tr > th {
 		border: none;
 		text-align: center;
+		
+		
 	}
 	tr > th:first-child {
 		text-align: left;
@@ -45,11 +46,20 @@
 		text-align: left;
 	}
 	tr > th {
-		padding: 0.5rem;
+		padding: 1rem;
 	}
 
 	tr > th:last-child {
 		text-align: right;
 		width: 10vw;
 	}
+
+	th {
+		padding:2rem;
+	}
+
+	th.total {
+		text-align: right;
+	}
+	
 </style>
