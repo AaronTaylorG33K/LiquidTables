@@ -4,15 +4,17 @@
 
 <!--- the tables are controllable by passing them an array of the groupin_lists you want to display-->
 
-<div class="flex flex-row">
-	<div class="w-3/5 border-r-2 border-gray-800">
-		<LiquidTables groupingLevels={[0, 2]} />
-	</div>
-	<div class="w-2/5">
-		<LiquidTables groupingLevels={[0, 3]} />
-	</div>
+
+
+<div class=" h-[50vh]  overflow-auto ">
+     <LiquidTables groupingLevels={[0,4]} />
 </div>
 
-<div class="border-t-2 border-gray-800 ">
-     <LiquidTables groupingLevels={[0,4]} />
+<div class="flex flex-row border-t-2 border-gray-700">
+	<div class="w-1/2  h-[40vh] overflow-auto ">
+		<LiquidTables groupingLevels={[0, 2]} />
+	</div>
+	<div class="w-1/2 h-[40vh] overflow-auto border-l-2 border-gray-700">
+		<LiquidTables groupingLevels={[0, 3]} />
+	</div>
 </div>

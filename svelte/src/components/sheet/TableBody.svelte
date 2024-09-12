@@ -31,14 +31,14 @@
 					<td class="text-left">
 						<a href={`/${column}/${sanitize(row[column] ?? '')}`}
 						class="text-gray-800 underline hover:no-underline"
-						>{row[column]}</a>
+						>{row[column] ?? ''}</a>
 					</td>
 
 				{:else if column === 'invoice_id'}
 				<td class="text-left">
 					<a href={`/${column.replace('_id','')}/${row[column]}`}
 					class="text-gray-800 underline hover:no-underline"
-					>{row[column]}</a>
+					>{row[column] ?? ''}</a>
 				</td>
 				{:else if column === 'quantity'  && row.groupingLevel !== 0}
 					<td class="text-center p-0" width="10%">
@@ -69,7 +69,7 @@
 
 	tr > td {
 		border: 1px solid #ededf4;
-		padding: 1rem;
+		padding: 0.75rem;
 	}
 
 	tr.group-0 > td {
