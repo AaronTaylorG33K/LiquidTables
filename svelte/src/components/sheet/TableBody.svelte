@@ -20,6 +20,8 @@
 		row.quantity = parseInt(target.value);
 		sendMessage({ data: { invoice_id: row.invoice_id, new_quantity: row.quantity } });
 	}
+
+	console.log(filterByColumn, filterByColumnValue);
 </script>
 
 <tbody>
@@ -33,8 +35,10 @@
 				{:else if column !== 'quantity' && column !== 'total' && column !== 'invoice_id'}
 					<td
 						class={`text-left ${column}`}
-						class:font-bold={column === filterByColumn}
-						class:font-light={column !== filterByColumn}
+						class:font-medium={column === filterByColumn ||
+							String(row[column]).toLowerCase() === filterByColumnValue.replace('+', ' ')}
+						class:font-light={column !== filterByColumn &&
+							!(String(row[column]).toLowerCase() === filterByColumnValue.replace('+', ' '))}
 					>
 						{#if row.groupingLevel !== 0 && !((row.groupingLevel === 1 || row.groupingLevel === 2 || row.groupingLevel === 3) && column === filterByColumn && filterByColumnValue !== '')}
 							<a

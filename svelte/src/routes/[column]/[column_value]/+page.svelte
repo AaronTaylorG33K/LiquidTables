@@ -6,34 +6,26 @@
 	$: filterByColumn = column === 'invoice' ? 'invoice_id' : column;
 </script>
 
-
-
-
-<div class="container mx-auto my-4 mb-12 mt-12 flex flex-col gap-4">
-  <div>
-	<h1 class="text-3xl capitalize">{column_value.replace('+',' ')}</h1>
-	<p class="text-gray-500">
-	
-   <span class=" capitalize">{column}</span> 
-	</p>
-	<div class="flex flex-row gap-4">
-		<div class="w-full overflow-auto border border-gray-200 mt-12">
-			<LiquidTables groupingLevels={[1, 2, 3, 4, 5]} {filterByColumn} filterByColumnValue={column_value} />
+<div class="flex flex-col gap-4 container mx-auto mt-4">
+	<div class="flex flex-row">
+		<div class=" max-h-[50vh] overflow-auto border-gray-200 border">
+			<LiquidTables
+				groupingLevels={[1, 2, 3, 4, 5]}
+				{filterByColumn}
+				filterByColumnValue={column_value}
+			/>
 		</div>
 	</div>
 
-</div>
-<div class="flex flex-row gap-4">
-	
-	<div class="w-1/3 h-[40vh] overflow-auto border border-gray-200">
-		<LiquidTables groupingLevels={[0, 1]}  />
+	<div class="flex flex-row gap-4">
+		<div class="w-1/3 h-[34vh] overflow-auto border border-gray-200">
+			<LiquidTables groupingLevels={[0, 1]} filterByColumnValue={column_value} />
+		</div>
+		<div class="w-1/3 h-[34vh] overflow-auto border border-gray-200">
+			<LiquidTables groupingLevels={[0, 2]} filterByColumnValue={column_value} />
+		</div>
+		<div class="w-1/3 h-[34vh] overflow-auto border border-gray-200">
+			<LiquidTables groupingLevels={[0, 3]} filterByColumnValue={column_value} />
+		</div>
 	</div>
-	<div class="w-1/3  h-[40vh] overflow-auto border border-gray-200 ">
-		<LiquidTables groupingLevels={[0, 2]} />
-	</div>
-	<div class="w-1/3 h-[40vh] overflow-auto border border-gray-200">
-		<LiquidTables groupingLevels={[0, 3]} />
-	</div>
-	
-</div>
 </div>

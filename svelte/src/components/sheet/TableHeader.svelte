@@ -9,7 +9,7 @@
 		{#each $columns as column}
 			<th
 				class={`whitespace-nowrap p-4 ${column}`}
-				class:font-bold={column === filterByColumn}
+				class:font-medium={column === filterByColumn}
 				class:font-light={column !== filterByColumn}
 			>
 				
@@ -19,7 +19,9 @@
 						</a> 
 
 					{:else if column === 'invoice_id'}
-						<a href={`../`} class="p- text-gray-800 underline hover:no-underline text-center">
+						<a href={`../`} 
+						class:font-medium={column === 'invoice_id' && filterByColumn === ''}
+						class="p- text-gray-800 underline hover:no-underline text-center">
 							{column.replace(/_/g, ' ')}
 						</a>
 					{:else}
