@@ -32,7 +32,12 @@
 		metricsStore.subscribe((metrics: Partial<Metrics>[]) => {
 			if (Array.isArray(metrics)) {
 				let formattedMetrics = formatData(metrics);
-				const filtered = filterData(formattedMetrics, groupingLevels, filterByColumn, filterByColumnValue);
+				const filtered = filterData(
+					formattedMetrics,
+					groupingLevels,
+					filterByColumn,
+					filterByColumnValue
+				);
 				filteredData.set(filtered);
 				let column_keys = getColumns(filtered);
 				column_keys = getColumns(filtered).filter((key) => !notColumns.includes(key));
@@ -51,24 +56,19 @@
 		});
 	}
 
-
 	$: {
-        
 		const { params } = $page;
-
-
-        const filterByColumn = params.column as keyof Metrics;
-        const filterByColumnValue = params.column_value;
-
-        applyFilter(filterByColumn, filterByColumnValue);
-    }
+		const filterByColumn = params.column as keyof Metrics;
+		const filterByColumnValue = params.column_value;
+		applyFilter(filterByColumn, filterByColumnValue);
+	}
 </script>
 
 <!-- <SearchBar /> in development -->
 {#if $filteredData.length > 0}
 	<table class="w-full border-b border-separate border-spacing-0 border-gray-200 overflow-y-auto">
 		<TableHeader {columns} {filterByColumn} />
-		<TableBody {filteredData} {columns} {filterByColumn} {filterByColumnValue}/>
+		<TableBody {filteredData} {columns} {filterByColumn} {filterByColumnValue} />
 	</table>
 {/if}
 
@@ -77,6 +77,9 @@
 		width: 100%;
 	}
 	.border-b {
+
+		position:relative;
+		z-index: 0;
 		border-bottom: 1px solid #e5e7eb; /* Tailwind's border-gray-200 */
 	}
 	.border-separate {

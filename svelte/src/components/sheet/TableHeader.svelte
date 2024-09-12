@@ -2,20 +2,25 @@
 	import Selectable from './ColumnFilter.svelte';
 	export let columns: string[] = [];
 	export let filterByColumn: string = '';
-	
-
 </script>
 
-<thead class="uppercase  sticky top-0 bg-white shadow-md  z-30">
+<thead class="uppercase sticky top-0 bg-white shadow-md z-30">
 	<tr class="">
 		{#each $columns as column}
-			<th class="text-left justify-between whitespace-nowrap"
-			class:font-bold={column === filterByColumn}
-			class:font-light={column !== filterByColumn}
-
+			<th
+				class="text-left justify-between whitespace-nowrap"
+				class:font-bold={column === filterByColumn}
+				class:font-light={column !== filterByColumn}
 			>
-				<div class="p-2 uppercase"
-				>{column.replace(/_/g, ' ')}</div>
+				<div class="p-2 uppercase">
+					{#if column !== 'invoice_id' && column !== 'total' && column !== 'quantity'}
+						<a href={`/${column}/`} class="text-gray-800 underline hover:no-underline">
+							{column.replace(/_/g, ' ')}
+						</a>
+					{:else}
+						{column.replace(/_/g, ' ')}
+					{/if}
+				</div>
 			</th>
 		{/each}
 	</tr>
@@ -23,24 +28,23 @@
 
 <style>
 	tr > th {
-		border:none;
+		border: none;
 		text-align: center;
 	}
 	tr > th:first-child {
-		text-align: center;
-		width:10vw;
+		text-align: left;
+		width: 10vw;
 	}
 	tr > th:nth-child(2) {
 		width: 40vw;
-		text-align:left;
+		text-align: left;
 	}
 	tr > th {
-		padding:0.75rem;
+		padding: 0.5rem;
 	}
 
 	tr > th:last-child {
 		text-align: right;
-		width: 10vw
-
+		width: 10vw;
 	}
 </style>

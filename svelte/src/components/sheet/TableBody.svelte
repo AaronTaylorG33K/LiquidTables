@@ -15,7 +15,6 @@
 		{ type: 'total', input: '' }
 	];
 
-
 	function qtyChange(event: Event, row: { invoice_id: number; quantity: number }) {
 		const target = event.target as HTMLInputElement;
 		row.quantity = parseInt(target.value);
@@ -45,10 +44,11 @@
 						{/if}
 					</td>
 				{:else if column === 'invoice_id'}
-					<td class="text-left">
+					<td class="text-center">
 						<a
 							href={`/${column.replace('_id', '')}/${row[column]}`}
-							class="text-gray-800 underline hover:no-underline">{row[column] ?? ''}</a
+							class="text-gray-800 underline hover:no-underline text-center w-full"
+							>{row[column] ?? ''}</a
 						>
 					</td>
 				{:else if column === 'quantity' && row.groupingLevel === 4}
@@ -89,8 +89,19 @@
 		text-align: center;
 	}
 
+	tr:last-child {
+		position: sticky;
+		bottom: 0;
+		box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.1);
+	}
+	tr:last-child > td {
+		background-color: #fff;
+		border: none;
+		padding: 1rem;
+	}
+
 	tr > td:first-child {
-		/* text-align: left; */
+		text-align: left;
 	}
 	tr > td:last-child {
 		text-align: right;
