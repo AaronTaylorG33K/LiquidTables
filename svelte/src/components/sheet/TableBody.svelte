@@ -32,7 +32,7 @@
 					</td>
 				{:else if column !== 'quantity' && column !== 'total' && column !== 'invoice_id'}
 					<td
-						class="text-left"
+						class={`text-left ${column}`}
 						class:font-bold={column === filterByColumn}
 						class:font-light={column !== filterByColumn}
 					>
@@ -83,51 +83,89 @@
 </tbody>
 
 <style>
-	tr > td {
+	td {
 		border: 1px solid #ededf4;
 		padding: 0.75rem;
 		text-align: center;
 	}
 
 	tr:last-child {
-		position: sticky;
-		bottom: 0;
-		box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.05);
-		
+	position: sticky;
+	bottom: 0;
+	background-color: #fff;
+	font-weight:500;
+
+	box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.05);
 	}
+
 	tr:last-child > td {
-		background-color: #fff;
 		border: none;
 		padding: 1rem;
 	}
 
-	tr > td:first-child {
-		text-align: left;
-	}
-
-	tr > td.invoice_id {
+	td.invoice_id {
 		text-align: center;
 	}
-
-	tr > td:last-child {
+	td.product {
+		text-align: left;
+		width: 40vw;
+	}
+	td.total {
 		text-align: right;
 	}
-
-	tr > td:nth-child(2) {
-		/* text-align: left; */
-		padding-left: 1.2rem;
+	td.customer, td.salesperson {
+		text-align: center;
+		width: 15vw;
 	}
 
-	tr.group-0 > td,
-	tr.group-1 > td,
-	tr.group-4 > td:nth-child(2) {
+	td:first-child.customer, td:first-child.salesperson {
 		text-align: left;
-		/* border: none; */
-		/* font-weight: bold; */
-	}
-	.total {
-		text-align: right !important;
-		max-width: 200px !important; 
 	}
 	
 </style>
+<!-- tr > td {
+	border: 1px solid #ededf4;
+	padding: 0.75rem;
+	text-align: center;
+}
+
+tr:last-child {
+	position: sticky;
+	bottom: 0;
+	box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.05);
+	
+}
+tr:last-child > td {
+	background-color: #fff;
+	border: none;
+	padding: 1rem;
+}
+
+tr > td:first-child {
+	text-align: left;
+}
+
+tr > td.invoice_id {
+	text-align: center;
+}
+
+tr > td:last-child {
+	text-align: right;
+	
+}
+
+tr > td:nth-child(2) {
+	/* text-align: left; */
+	padding-left: 1.2rem;
+}
+
+tr.group-0 > td,
+tr.group-1 > td,
+tr.group-4 > td:nth-child(2) {
+	text-align: left;
+}
+.total {
+	text-align: right !important;
+	max-width: 200px !important; 
+	
+} -->
