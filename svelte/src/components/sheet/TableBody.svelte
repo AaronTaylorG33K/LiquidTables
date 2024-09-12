@@ -39,7 +39,7 @@
 						{#if row.groupingLevel !== 0 && !((row.groupingLevel === 1 || row.groupingLevel === 2 || row.groupingLevel === 3) && column === filterByColumn && filterByColumnValue !== '')}
 							<a
 								href={`/${column}/${sanitize(row[column] ?? '')}`}
-								class="text-gray-800 underline hover:no-underline">{row[column] ?? ''}</a
+								class="whitespace-nowrap text-gray-800 underline hover:no-underline">{row[column] ?? ''}</a
 							>
 						{/if}
 					</td>

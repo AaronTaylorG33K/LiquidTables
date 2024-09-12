@@ -12,11 +12,12 @@
 				class:font-bold={column === filterByColumn}
 				class:font-light={column !== filterByColumn}
 			>
-				<div class="p-2 uppercase">
+				<div class="p-2 uppercase flex justify-between items-center gap-4">
 					{#if column !== 'invoice_id' && column !== 'total' && column !== 'quantity'}
 						<a href={`/${column}/`} class="text-gray-800 underline hover:no-underline">
 							{column.replace(/_/g, ' ')}
-						</a>
+						</a> 
+
 					{:else if column === 'invoice_id'}
 						<a href={`../`} class="text-gray-800 underline hover:no-underline">
 							{column.replace(/_/g, ' ')}
