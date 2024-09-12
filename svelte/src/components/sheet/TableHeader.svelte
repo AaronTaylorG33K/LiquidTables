@@ -21,7 +21,7 @@
 		border:none
 	}
 	tr > th {
-		padding:1rem;
+		padding:0.75rem;
 	}
 	tr > th:last-child {
 		text-align: right;

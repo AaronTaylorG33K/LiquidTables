@@ -20,7 +20,7 @@
 
 <tbody>
 	{#each $filteredData as row, index}
-		<tr class={`p-4 group-${row.groupingLevel} index-${index} last:font-bold  odd:bg-gray-50 `}>
+		<tr class={`p-4 group-${row.groupingLevel} index-${index}  odd:bg-gray-50 `}>
 			
 			{#each $columns as column}
 				{#if column === 'amount'}
@@ -28,7 +28,8 @@
 						{formatMoney(Number(row[column])) ?? ''}
 					</td>
 				{:else if column === 'customer' || column === 'product' || column === 'salesperson' }
-					<td class="text-left">
+					<td class="text-left"
+					>
 						<a href={`/${column}/${sanitize(row[column] ?? '')}`}
 						class="text-gray-800 underline hover:no-underline"
 						>{row[column] ?? ''}</a>
@@ -52,7 +53,12 @@
 						/>
 					</td>
 				{:else if (column === 'total')}
+			
 					<td class="text-right border-r">
+						{#if row.groupingLevel === 0}
+						<span class="
+						text-gray-400 font-light mr-2">Total</span>
+					{/if}
 						{formatMoney(Number(row[column])) ?? ''}
 					</td>
 				{:else}
@@ -74,6 +80,7 @@
 
 	tr.group-0 > td {
 		border: none;
+		font-weight: bold;
 	}
 
 
