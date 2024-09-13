@@ -30,7 +30,9 @@
 			total,
 		} = row}
 
-		<tr class={`p-4 group-${level} index-${index}  odd:bg-gray-50 `}>
+		<tr class={`p-4 group-${level} index-${index}  odd:bg-gray-50 `}
+		
+		>
 			{#each $columns as column}
 				{@const col = row[column]}
 				{@const colString = String(col).toLowerCase()}
@@ -44,7 +46,7 @@
 						class={`text-left ${column}`}
 						class:font-medium={colFiltered || thisCol}
 						class:font-light={!colFiltered && !thisCol}
-						class:selected={colFiltered && isDataRow}
+						class:selected={thisCol && isDataRow}
 					>
 						{#if level !== 0 && !((level === 1 || level === 2 || level === 3) && colFiltered && filterByColumnValue !== '')}
 							<a
@@ -71,11 +73,14 @@
 						/>
 					</td>
 				{:else if column === 'total'}
-					<td class={`text-right border-r ${column} whitespace-nowrap`}>
+					<td class={`text-right border-r ${column} whitespace-nowrap`}
+					
+					class:font-medium={colFiltered || thisCol}
+					>
 						{#if level < 1}
 							<span
 								class="
-						text-gray-400 font-light mr-2">Total</span
+						text-gray-400 mr-2">Total</span
 							>
 						{/if}
 						{colTotal ?? ''}
@@ -108,6 +113,10 @@
 
 	tr:hover {
 		background-color: #dfefff50;
+	}
+
+	tr:last-child:hover {
+		background-color: #ffffff;
 	}
 
 	td.selected {
