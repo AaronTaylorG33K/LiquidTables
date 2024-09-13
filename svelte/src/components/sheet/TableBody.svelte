@@ -2,7 +2,6 @@
 	import { formatMoney, sanitize, reString } from '../../lib/format';
 	import { sendMessage } from '../../lib/websocket';
 	import type { Metrics } from '../../types/metrics';
-
 	import { get } from 'svelte/store';
 
 	export let filteredData: Metrics[] = [];
@@ -20,66 +19,70 @@
 		row.quantity = parseInt(target.value);
 		sendMessage({ data: { invoice_id: row.invoice_id, new_quantity: row.quantity } });
 	}
-
-	console.log(filterByColumn, filterByColumnValue);
 </script>
 
 <tbody>
-	{#each $filteredData as row, index}
-		<tr class={`p-4 group-${row.groupingLevel} index-${index}  odd:bg-gray-50 `}>
+	{#each $filteredData as row, index (row.invoice_id || row.salesperson || row.customer || row.product || row.total)}
+		{@const {
+			groupingLevel: level,
+			invoice_id,
+			quantity,
+			total,
+		} = row}
+
+		<tr class={`p-4 group-${level} index-${index}  odd:bg-gray-50 `}>
 			{#each $columns as column}
-				{#if column === 'amount'}
-					<td width="2%" class={`text-right border-r ${column}`}>
-						{formatMoney(Number(row[column])) ?? ''}
-					</td>
-				{:else if column !== 'quantity' && column !== 'total' && column !== 'invoice_id'}
+				{@const col = row[column]}
+				{@const colString = String(col).toLowerCase()}
+				{@const colTotal = formatMoney(Number(col))}
+				{@const thisCol = colString === filterByColumnValue.replace('+', ' ')}
+				{@const colFiltered = column === filterByColumn}
+				{@const isDataRow = level !== 0 && !((level === 1 || level === 2 || level === 3))}
+
+				{#if column !== 'quantity' && column !== 'total' && column !== 'invoice_id'}
 					<td
 						class={`text-left ${column}`}
-						class:font-medium={column === filterByColumn ||
-							String(row[column]).toLowerCase() === filterByColumnValue.replace('+', ' ')}
-						class:font-light={column !== filterByColumn &&
-							!(String(row[column]).toLowerCase() === filterByColumnValue.replace('+', ' '))}
+						class:font-medium={colFiltered || thisCol}
+						class:font-light={!colFiltered && !thisCol}
+						class:selected={colFiltered && isDataRow}
 					>
-						{#if row.groupingLevel !== 0 && !((row.groupingLevel === 1 || row.groupingLevel === 2 || row.groupingLevel === 3) && column === filterByColumn && filterByColumnValue !== '')}
+						{#if level !== 0 && !((level === 1 || level === 2 || level === 3) && colFiltered && filterByColumnValue !== '')}
 							<a
-								href={`/${column}/${sanitize(row[column] ?? '')}`}
-								class="whitespace-nowrap text-gray-800 underline hover:no-underline"
-								>{row[column] ?? ''}</a
+								href={`/${column}/${sanitize(col ?? '')}`}
+								class="whitespace-nowrap text-gray-800 underline hover:no-underline">{col ?? ''}</a
 							>
 						{/if}
 					</td>
 				{:else if column === 'invoice_id'}
 					<td class="text-center invoice_id">
 						<a
-							href={`/${column.replace('_id', '')}/${row[column]}`}
-							class="text-gray-800 underline hover:no-underline text-center w-full"
-							>{row[column] ?? ''}</a
+							href={`/${column.replace('_id', '')}/${col}`}
+							class="text-gray-800 underline hover:no-underline text-center w-full">{col ?? ''}</a
 						>
 					</td>
-				{:else if column === 'quantity' && row.groupingLevel === 4}
+				{:else if column === 'quantity' && level === 4}
 					<td class="text-center p-0" width="10%">
 						<input
 							class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none placeholder-gray-400"
 							type="number"
 							placeholder="1"
 							value={row.quantity}
-							on:input={(event) =>
-								qtyChange(event, { invoice_id: row.invoice_id, quantity: row.quantity })}
+							on:input={(event) => qtyChange(event, { invoice_id, quantity })}
 						/>
 					</td>
 				{:else if column === 'total'}
 					<td class={`text-right border-r ${column} whitespace-nowrap`}>
-						{#if row.groupingLevel < 1}
+						{#if level < 1}
 							<span
 								class="
 						text-gray-400 font-light mr-2">Total</span
 							>
 						{/if}
-						{formatMoney(Number(row[column])) ?? ''}
+						{colTotal ?? ''}
 					</td>
 				{:else}
 					<td class="text-left">
-						{row[column] ?? ''}
+						{col ?? ''}
 					</td>
 				{/if}
 			{/each}
@@ -101,6 +104,14 @@
 		font-weight: 500;
 
 		box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.05);
+	}
+
+	tr:hover {
+		background-color: #dfefff50;
+	}
+
+	td.selected {
+		background-color: #dfefff50;
 	}
 
 	tr:last-child > td {
