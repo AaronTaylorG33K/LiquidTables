@@ -5,7 +5,7 @@ export function sanitize(str: string): string {
     if (typeof str !== 'string') {
         return '';
     }
-    return str.replace(/ /g, '+').toLowerCase();
+    return str.replace(/ /g, '+').toLowerCase().replace('_id', '');
 }
 
 export function reString(str: string): string {

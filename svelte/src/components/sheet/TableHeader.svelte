@@ -12,21 +12,7 @@
 				class:font-medium={column === filterByColumn}
 				class:font-light={column !== filterByColumn}
 			>
-				
-					{#if column !== 'invoice_id' && column !== 'total' && column !== 'quantity'}
-						<a href={`/${column}/`} class="text-gray-800 underline hover:no-underline">
-							{column.replace(/_/g, ' ')}
-						</a> 
-
-					{:else if column === 'invoice_id'}
-						<a href={`../`} 
-						class:font-medium={column === 'invoice_id' && filterByColumn === ''}
-						class="p- text-gray-800 underline hover:no-underline text-center">
-							{column.replace(/_/g, ' ')}
-						</a>
-					{:else}
-						{column.replace(/_/g, ' ')}
-					{/if}
+				{column.replace(/_/g, ' ')}
 			</th>
 		{/each}
 	</tr>
@@ -49,5 +35,4 @@
 		text-align: left;
 		width: 40vw;
 	}
-	
 </style>

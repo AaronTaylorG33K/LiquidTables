@@ -1,93 +1,60 @@
 <script lang="ts">
-	import { formatMoney, sanitize, reString } from '../../lib/format';
-	import { sendMessage } from '../../lib/websocket';
+	import { formatMoney, sanitize } from '../../lib/format';
 	import type { Metrics } from '../../types/metrics';
-	import { get } from 'svelte/store';
+	import NumberInput from './NumberInput.svelte';
 
 	export let filteredData: Metrics[] = [];
 	export let columns: string[] = [];
 	export let filterByColumn: string = '';
 	export let filterByColumnValue: string = '';
-
-	const colConfig = [
-		{ type: 'invoice_id', input: '' },
-		{ type: 'total', input: '' }
-	];
-
-	function qtyChange(event: Event, row: { invoice_id: number; quantity: number }) {
-		const target = event.target as HTMLInputElement;
-		row.quantity = parseInt(target.value);
-		sendMessage({ data: { invoice_id: row.invoice_id, new_quantity: row.quantity } });
-	}
 </script>
 
 <tbody>
-	{#each $filteredData as row, index (row.invoice_id || row.salesperson || row.customer || row.product || row.total)}
-		{@const {
-			groupingLevel: level,
-			invoice_id,
-			quantity,
-			total,
-		} = row}
-
-		<tr class={`p-4 group-${level} index-${index}  odd:bg-gray-50 `}
-		
-		>
+	{#each $filteredData as row, index (row.invoice_id || row.salesperson || row.customer || row.product || row.total || index)}
+		{@const { groupingLevel: level, invoice_id, quantity, total } = row}
+		{@const isLastRow = index === $filteredData.length - 1}
+		{@const isCategory = filterByColumn === ''}
+		{@const activeCategoryRow = isCategory
+			? $filteredData.findIndex((row) =>
+					Object.values(row).some(
+						(value) =>
+							String(value).toLowerCase() === filterByColumnValue.toLowerCase().replace('+', ' ')
+					)
+				)
+			: -1}
+		<tr>
 			{#each $columns as column}
-				{@const col = row[column]}
-				{@const colString = String(col).toLowerCase()}
-				{@const colTotal = formatMoney(Number(col))}
-				{@const thisCol = colString === filterByColumnValue.replace('+', ' ')}
-				{@const colFiltered = column === filterByColumn}
-				{@const isDataRow = level !== 0 && !((level === 1 || level === 2 || level === 3))}
+				{@const columnValue = row[column]}
+				{@const columnString = String(columnValue).toLowerCase()}
+				{@const columnTotal = formatMoney(Number(columnValue))}
+				{@const columnFilter = filterByColumnValue.toLowerCase().replace('+', ' ')}
 
-				{#if column !== 'quantity' && column !== 'total' && column !== 'invoice_id'}
-					<td
-						class={`text-left ${column}`}
-						class:font-medium={colFiltered || thisCol}
-						class:font-light={!colFiltered && !thisCol}
-						class:selected={thisCol && isDataRow}
-					>
-						{#if level !== 0 && !((level === 1 || level === 2 || level === 3) && colFiltered && filterByColumnValue !== '')}
-							<a
-								href={`/${column}/${sanitize(col ?? '')}`}
-								class="whitespace-nowrap text-gray-800 underline hover:no-underline">{col ?? ''}</a
-							>
-						{/if}
-					</td>
-				{:else if column === 'invoice_id'}
-					<td class="text-center invoice_id">
-						<a
-							href={`/${column.replace('_id', '')}/${col}`}
-							class="text-gray-800 underline hover:no-underline text-center w-full">{col ?? ''}</a
-						>
-					</td>
-				{:else if column === 'quantity' && level === 4}
-					<td class="text-center p-0" width="10%">
-						<input
-							class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none placeholder-gray-400"
-							type="number"
-							placeholder="1"
-							value={row.quantity}
-							on:input={(event) => qtyChange(event, { invoice_id, quantity })}
-						/>
+				{@const isDataRow = level >= 1}
+				{@const isSelected =
+					(column === filterByColumn && columnFilter === columnString) ||
+					activeCategoryRow === index}
+
+				{#if column === 'quantity' && level === 4}
+					<td class={column}>
+						<NumberInput value={quantity} id={invoice_id} />
 					</td>
 				{:else if column === 'total'}
-					<td class={`text-right border-r ${column} whitespace-nowrap`}
-					
-					class:font-medium={colFiltered || thisCol}
+					<td
+						class={column}
+						class:font-medium={isLastRow || isSelected}
+						class:selected={isSelected}
 					>
-						{#if level < 1}
-							<span
-								class="
-						text-gray-400 mr-2">Total</span
-							>
-						{/if}
-						{colTotal ?? ''}
+						{columnTotal ?? ''}
+					</td>
+				{:else if column === 'invoice_id'}
+					<td class={column}>
+						{columnValue ?? ''}
 					</td>
 				{:else}
-					<td class="text-left">
-						{col ?? ''}
+					<td class={column} class:selected={isSelected && !isLastRow}>
+						{#if isDataRow && !isLastRow}
+							<a href={`/${column}/${sanitize(columnValue ?? '')}`}>{columnValue ?? ''}</a>
+						{/if}
 					</td>
 				{/if}
 			{/each}
@@ -96,6 +63,25 @@
 </tbody>
 
 <style>
+	a {
+		white-space: nowrap;
+		color: rgb(31 41 55, 1);
+		text-decoration: underline;
+	}
+	a:hover {
+		color: rgb(31 41 55, 1);
+		text-decoration: none;
+	}
+
+	tr {
+		padding:1rem;
+	}
+
+	tr:nth-child(odd) {
+		background-color: #f9f9f9;
+	}
+
+		
 	td {
 		border: 1px solid #ededf4;
 		padding: 0.75rem;
@@ -106,7 +92,6 @@
 		position: sticky;
 		bottom: 0;
 		background-color: #fff;
-		font-weight: 500;
 
 		box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.05);
 	}
@@ -121,6 +106,7 @@
 
 	td.selected {
 		background-color: #dfefff50;
+		font-weight: 500;
 	}
 
 	tr:last-child > td {
@@ -135,8 +121,15 @@
 		text-align: left;
 		width: 40vw;
 	}
+	td.quantity {
+		text-align: center;
+		padding: 0.5rem;
+		width:10%;
+	}
 	td.total {
 		text-align: right;
+		white-space: nowrap;
+		border-right: 1px;
 	}
 	td.customer,
 	td.salesperson {
