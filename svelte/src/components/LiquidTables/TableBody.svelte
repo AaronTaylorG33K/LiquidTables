@@ -16,6 +16,7 @@
 		{@const isLastRow = index === $filteredData.length - 1}
 		{@const isCategory = filterByColumn === ''}
 		{@const activeCategoryRow = isCategory
+		
 			? $filteredData.findIndex((row) =>
 					Object.values(row).some(
 						(value) =>
@@ -23,6 +24,7 @@
 					)
 				)
 			: -1}
+		{@const tempRow = level === 10}
 		<tr>
 			{#each $columns as column}
 				{@const columnValue = row[column]}
@@ -41,15 +43,21 @@
 					class:font-light={!isLastRow || !isSelected}
 					class:selected={isSelected && !isLastRow}
 				>
-					{#if column === 'quantity' && level === 4}
-						<NumberInput value={quantity} id={invoice_id} />
-					{:else if column === 'total'}
-						{columnTotal ?? ''}
-					{:else if column === 'invoice_id'}
-						{columnValue ?? ''}
-					{:else if isDataRow && !isLastRow}
-						<a href={`/${column}/${sanitize(columnValue ?? '')}`}>{columnValue ?? ''}</a>
+					{#if tempRow}
+					<div class="p-4"></div>
+					{:else}
+				
+						{#if column === 'quantity' && level === 4}
+							<NumberInput value={quantity} id={invoice_id} />
+						{:else if column === 'total'}
+							{columnTotal ?? ''}
+						{:else if column === 'invoice_id'}
+							{columnValue ?? ''}
+						{:else if isDataRow && !isLastRow}
+							<a href={`/${column}/${sanitize(columnValue ?? '')}`}>{columnValue ?? ''}</a>
+						{/if}
 					{/if}
+
 				</td>
 			{/each}
 		</tr>
