@@ -42,7 +42,7 @@
 		gap: 1rem;
 		margin-top: 1rem;
     max-height: 50vh;
-    min-height: 34vh;
+    min-height: 24vh;
     overflow: auto;
     border: 1px solid #e2e8f0;
 	}
