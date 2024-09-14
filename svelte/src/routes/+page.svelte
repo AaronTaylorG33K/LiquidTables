@@ -9,13 +9,13 @@
 	</div>
 
 	<div class="subTables">
-		<div class="small-table-container">
+		<div>
 			<LiquidTables groupingLevels={[0, 1]} />
 		</div>
-		<div class="small-table-container">
+		<div>
 			<LiquidTables groupingLevels={[0, 2]} />
 		</div>
-		<div class="small-table-container">
+		<div>
 			<LiquidTables groupingLevels={[0, 3]} />
 		</div>
 	</div>
