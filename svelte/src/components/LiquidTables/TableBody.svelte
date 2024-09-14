@@ -100,6 +100,7 @@
 	td.selected {
 		background-color: #dfefff50;
 		font-weight: 500;
+		transition: all 0.2s;
 	}
 
 	tr:last-child > td {
