@@ -13,9 +13,7 @@
 	  "strict": true,
 	  "target": "esnext",
 
-	  "types": ["svelte",
-		"vite/client"
-	  ]
+	  "types": ["svelte"]
 	},
 	"include": [
 	  "src/**/*.ts",

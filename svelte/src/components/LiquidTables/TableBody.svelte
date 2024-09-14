@@ -5,8 +5,8 @@
 	import NumberInput from './NumberInput.svelte';
 
 	export let filteredData = writable<Metrics[]>([]);
-	export let columns = writable<(keyof Metrics)[]>([]);
-	export let filterByColumn: keyof Metrics | undefined = undefined;
+	export let columns = writable<string[]>([]);
+	export let filterByColumn: string = '';
 	export let filterByColumnValue: string = '';
 </script>
 
@@ -14,8 +14,9 @@
 	{#each $filteredData as row, index (row.invoice_id || row.salesperson || row.customer || row.product || row.total || index)}
 		{@const { groupingLevel: level, invoice_id, quantity, total } = row}
 		{@const isLastRow = index === $filteredData.length - 1}
-		{@const isCategory = filterByColumn === undefined}
+		{@const isCategory = filterByColumn === ''}
 		{@const activeCategoryRow = isCategory
+		
 			? $filteredData.findIndex((row) =>
 					Object.values(row).some(
 						(value) =>
@@ -23,6 +24,7 @@
 					)
 				)
 			: -1}
+		{@const tempRow = level === 10}
 		<tr>
 			{#each $columns as column}
 				{@const columnValue = row[column]}
@@ -36,20 +38,26 @@
 					activeCategoryRow === index}
 
 				<td
-					class={columnString}
+					class={column}
 					class:font-medium={isLastRow || isSelected}
 					class:font-light={!isLastRow || !isSelected}
 					class:selected={isSelected && !isLastRow}
 				>
-					{#if column === 'quantity' && level === 4}
-						<NumberInput value={quantity} id={invoice_id} />
-					{:else if column === 'total'}
-						{columnTotal ?? ''}
-					{:else if column === 'invoice_id'}
-						{columnValue ?? ''}
-					{:else if isDataRow && !isLastRow}
-						<a href={`/${column}/${sanitize(columnString ?? '')}`}>{columnString ?? ''}</a>
+					{#if tempRow}
+					<div class="p-4"></div>
+					{:else}
+				
+						{#if column === 'quantity' && level === 4}
+							<NumberInput value={quantity} id={invoice_id} />
+						{:else if column === 'total'}
+							{columnTotal ?? ''}
+						{:else if column === 'invoice_id'}
+							{columnValue ?? ''}
+						{:else if isDataRow && !isLastRow}
+							<a href={`/${column}/${sanitize(columnValue ?? '')}`}>{columnValue ?? ''}</a>
+						{/if}
 					{/if}
+
 				</td>
 			{/each}
 		</tr>
@@ -125,7 +133,8 @@
 		text-align: right;
 		white-space: nowrap;
 		border-right: 1px;
-		width: 10%;
+		width:10%;
+		
 	}
 	td.customer,
 	td.salesperson {
@@ -140,6 +149,6 @@
 
 	tr:last-child td.total {
 		position: sticky;
-		right: 0;
+		right:0;
 	}
 </style>

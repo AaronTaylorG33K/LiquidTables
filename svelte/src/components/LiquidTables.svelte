@@ -1,9 +1,4 @@
 <script lang="ts">
-
-	import { error } from '@sveltejs/kit';
-
-	/** @type {import('./$types').PageLoad} */
-
 	import { page } from '$app/stores';
 	import type { Metrics } from '../types/metrics';
 	import { writable } from 'svelte/store';

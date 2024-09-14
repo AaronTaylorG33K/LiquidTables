@@ -1,5 +1,5 @@
 {
-	"name": "svelte",
+	"name": "svelete",
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
@@ -39,6 +39,8 @@
 	"type": "module",
 	"dependencies": {
 		"@sveltejs/adapter-node": "^5.2.2",
-		"@sveltejs/adapter-static": "^3.0.4"
+		"@sveltejs/adapter-static": "^3.0.4",
+		"add": "^2.0.6",
+		"pnpm": "^9.9.0"
 	}
 }
