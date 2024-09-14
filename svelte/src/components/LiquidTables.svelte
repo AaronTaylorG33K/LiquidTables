@@ -1,26 +1,22 @@
 <script lang="ts">
-	import { onMount, createEventDispatcher } from 'svelte';
-	import { get } from 'svelte/store';
 	import { page } from '$app/stores';
+	import type { Metrics } from '../types/metrics';
 	import { writable } from 'svelte/store';
 	import { metricsStore } from '../store/metrics';
 	import { filterData } from '../lib/filtering';
 	import { formatData } from '../lib/format';
 	import TableHeader from './LiquidTables/TableHeader.svelte';
 	import TableBody from './LiquidTables/TableBody.svelte';
-	import type { Metrics } from '../types/metrics';
 
 	export const filteredData = writable<Metrics[]>([]);
-	export let groupingLevels: number[] = [];
-	export const columns = writable<string[]>([]);
 
+	export const columns = writable<string[]>([]);
+	export let groupingLevels: number[] = [];
 	export let filterByColumn: string = '';
 	export let filterByColumnValue: string = '';
 
 	// prevent certain columns from showing
 	let notColumns = ['customer_id', 'salesperson_id'];
-
-	const dispatch = createEventDispatcher();
 
 	function getColumns(data: Metrics[]): string[] {
 		if (!data || data.length === 0) return [];
@@ -57,6 +53,8 @@
 	}
 
 	$: {
+		// I'm using the page routing to filter the data
+		// This makes easy to navigate nested levels of data
 		const { params } = $page;
 		const filterByColumn = params.column as keyof Metrics;
 		const filterByColumnValue = params.column_value;
@@ -64,10 +62,7 @@
 	}
 </script>
 
-<!-- <SearchBar /> in development -->
-{#if $filteredData.length > 0}
-	<table class="w-full border-b border-separate border-spacing-0 border-gray-200 overflow-y-auto">
-		<TableHeader {columns} {filterByColumn} />
-		<TableBody {filteredData} {columns} {filterByColumn} {filterByColumnValue} />
-	</table>
-{/if}
+<table class="w-full">
+	<TableHeader {columns} {filterByColumn} />
+	<TableBody {filteredData} {columns} {filterByColumn} {filterByColumnValue} />
+</table>
