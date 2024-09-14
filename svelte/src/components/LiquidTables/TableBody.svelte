@@ -125,6 +125,7 @@
 		text-align: right;
 		white-space: nowrap;
 		border-right: 1px;
+		
 	}
 	td.customer,
 	td.salesperson {
@@ -135,5 +136,10 @@
 	td:first-child.customer,
 	td:first-child.salesperson {
 		text-align: left;
+	}
+
+	tr:last-child td.total {
+		position: sticky;
+		right:0;
 	}
 </style>

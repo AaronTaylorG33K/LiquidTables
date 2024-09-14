@@ -1,11 +1,10 @@
-import { writable, type Writable } from 'svelte/store';
+import { writable } from 'svelte/store';
 import { metricsStore } from '../store/metrics';
 import type { Metrics } from '../types/metrics';
 
 let ws: WebSocket | null = null;
 const retryInterval = 10000; // 10 seconds
-const status: Writable<string> = writable('disconnected');
-
+const status = writable<string>('connecting...');
 const websocketStore = writable<WebSocket | null>(null);
 
 function initializeWebSocket() {

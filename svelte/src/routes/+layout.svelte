@@ -4,6 +4,7 @@
 	import Header from '../components/header.svelte';
 	import '../tailwind.css';
 	import { closeWebSocket } from '../lib/websocket';
+	import Connection from '../components/connection.svelte';
 
 	onMount(() => {
 		return () => {
@@ -17,6 +18,8 @@
 </svelte:head>
 <Header />
 
-<main class="flex flex-col">
+<main>
 	<slot />
 </main>
+
+<Connection />

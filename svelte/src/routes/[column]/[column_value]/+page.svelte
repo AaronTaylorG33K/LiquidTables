@@ -15,7 +15,8 @@
 		/>
 	</div>
 
-	<div class="subTables">
+  <!--- little bit of tailwind magic -->
+	<div class="subTables flex flex-col lg:flex-row w-full [&>div]:w-full lg:[&>div]:w-1/3 ">
 		<div>
 			<LiquidTables groupingLevels={[0, 1]} filterByColumnValue={column_value} />
 		</div>
@@ -47,12 +48,10 @@
     border: 1px solid #e2e8f0;
 	}
 	.subTables {
-		display: flex;
-		flex-direction: row;
 		gap: 1rem;
+    width:100%;
 	}
 	.subTables > div {
-		width: 33.3333%;
 		height: 34vh;
 		overflow: auto;
 		border: 1px solid #e2e8f0;
