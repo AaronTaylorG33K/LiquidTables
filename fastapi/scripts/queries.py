@@ -37,5 +37,5 @@ query = """
             )
         ORDER BY 
             grouping_level,
-            product.product_name, customer.customer_name, salesperson.salesperson_name, invoice.invoice_id;
+            invoice.invoice_id, product.product_name, customer.customer_name, salesperson.salesperson_name;
         """

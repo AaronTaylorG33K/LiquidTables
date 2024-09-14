@@ -35,6 +35,7 @@
 		gap: 1rem;
 		margin-top: 1rem;
 		max-height: 50vh;
+		min-height: 20vh;
 		overflow: auto;
 		border: 1px solid #e2e8f0;
 	}

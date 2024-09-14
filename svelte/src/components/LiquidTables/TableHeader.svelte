@@ -13,7 +13,13 @@
 				class:font-medium={selected}
 				class:font-light={!selected}
 			>
-				{column.replace(/_/g, ' ')}
+				{#if column === 'invoice_id'}
+					<a href="../"
+					class="underline"
+					>Invoice</a> 
+				{:else}
+					{column}
+				{/if}
 			</th>
 		{/each}
 	</tr>
