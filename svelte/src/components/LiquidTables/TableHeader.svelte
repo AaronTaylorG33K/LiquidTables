@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { writable } from 'svelte/store';
+	import { Metrics } from '../../types/metrics';
 	export let columns = writable<string[]>([]);
-	export let filterByColumn: string = '';
+	export let filterByColumn: keyof Metrics | undefined = undefined;
 </script>
 
 <thead class="uppercase sticky top-0 bg-white shadow-md z-30">
