@@ -125,6 +125,7 @@
 		text-align: right;
 		white-space: nowrap;
 		border-right: 1px;
+		width:10%;
 		
 	}
 	td.customer,
