@@ -41,6 +41,9 @@
 		flex-direction: column;
 		gap: 1rem;
 		margin-top: 1rem;
+    max-height: 50vh;
+    overflow: auto;
+    border: 1px solid #e2e8f0;
 	}
 	.subTables {
 		display: flex;

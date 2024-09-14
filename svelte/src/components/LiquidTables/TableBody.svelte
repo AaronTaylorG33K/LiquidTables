@@ -1,10 +1,11 @@
 <script lang="ts">
+	import { writable } from 'svelte/store';
 	import { formatMoney, sanitize } from '../../lib/format';
 	import type { Metrics } from '../../types/metrics';
 	import NumberInput from './NumberInput.svelte';
 
-	export let filteredData: Metrics[] = [];
-	export let columns: string[] = [];
+	export let filteredData = writable<Metrics[]>([]);
+	export let columns = writable<string[]>([]);
 	export let filterByColumn: string = '';
 	export let filterByColumnValue: string = '';
 </script>

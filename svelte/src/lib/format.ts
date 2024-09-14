@@ -30,11 +30,14 @@ export function formatData(metrics: (Partial<Metrics> | MetricTuple)[]): Metrics
 				total,
 				groupingLevel
 			] = metric;
+
+            // use this to re-order the columns in the UI
 			return {
+
+				invoice_id,
 				product,
 				customer,
 				salesperson,
-				invoice_id,
 				customer_id,
 				salesperson_id,
 				quantity,
