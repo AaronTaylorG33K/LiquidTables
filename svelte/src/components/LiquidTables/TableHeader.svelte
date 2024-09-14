@@ -7,10 +7,11 @@
 <thead class="uppercase sticky top-0 bg-white shadow-md z-30">
 	<tr>
 		{#each $columns as column}
+		{@const selected = column === filterByColumn}
 			<th
-				class={`whitespace-nowrap p-4 ${column}`}
-				class:font-medium={column === filterByColumn}
-				class:font-light={column !== filterByColumn}
+				class={column}
+				class:font-medium={selected}
+				class:font-light={!selected}
 			>
 				{column.replace(/_/g, ' ')}
 			</th>
@@ -19,6 +20,10 @@
 </thead>
 
 <style>
+	th {
+		white-space: nowrap;
+		padding: 1rem;
+	}
 	th.product {
 		text-align: left;
 		width: 40vw;

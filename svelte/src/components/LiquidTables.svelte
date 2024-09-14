@@ -15,8 +15,7 @@
 	export let filterByColumn: string = '';
 	export let filterByColumnValue: string = '';
 
-	// prevent certain columns from showing
-	let notColumns = ['customer_id', 'salesperson_id'];
+	let hideColumns = ['customer_id', 'salesperson_id'];
 
 	function getColumns(data: Metrics[]): string[] {
 		if (!data || data.length === 0) return [];
@@ -36,7 +35,7 @@
 				);
 				filteredData.set(filtered);
 				let column_keys = getColumns(filtered);
-				column_keys = getColumns(filtered).filter((key) => !notColumns.includes(key));
+				column_keys = getColumns(filtered).filter((key) => !hideColumns.includes(key));
 				columns.set(column_keys);
 			} else {
 				console.error('metrics is not an array:', metrics);

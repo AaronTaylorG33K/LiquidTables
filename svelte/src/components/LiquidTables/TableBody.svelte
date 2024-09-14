@@ -35,29 +35,22 @@
 					(column === filterByColumn && columnFilter === columnString) ||
 					activeCategoryRow === index}
 
-				{#if column === 'quantity' && level === 4}
-					<td class={column}>
+				<td
+					class={column}
+					class:font-medium={isLastRow || isSelected}
+					class:font-light={!isLastRow || !isSelected}
+					class:selected={isSelected && !isLastRow}
+				>
+					{#if column === 'quantity' && level === 4}
 						<NumberInput value={quantity} id={invoice_id} />
-					</td>
-				{:else if column === 'total'}
-					<td
-						class={column}
-						class:font-medium={isLastRow || isSelected}
-						class:selected={isSelected}
-					>
+					{:else if column === 'total'}
 						{columnTotal ?? ''}
-					</td>
-				{:else if column === 'invoice_id'}
-					<td class={column}>
+					{:else if column === 'invoice_id'}
 						{columnValue ?? ''}
-					</td>
-				{:else}
-					<td class={column} class:selected={isSelected && !isLastRow}>
-						{#if isDataRow && !isLastRow}
-							<a href={`/${column}/${sanitize(columnValue ?? '')}`}>{columnValue ?? ''}</a>
-						{/if}
-					</td>
-				{/if}
+					{:else if isDataRow && !isLastRow}
+						<a href={`/${column}/${sanitize(columnValue ?? '')}`}>{columnValue ?? ''}</a>
+					{/if}
+				</td>
 			{/each}
 		</tr>
 	{/each}
@@ -75,14 +68,13 @@
 	}
 
 	tr {
-		padding:1rem;
+		padding: 1rem;
 	}
 
 	tr:nth-child(odd) {
 		background-color: #f9f9f9;
 	}
 
-		
 	td {
 		border: 1px solid #ededf4;
 		padding: 0.75rem;
@@ -125,7 +117,7 @@
 	td.quantity {
 		text-align: center;
 		padding: 0.5rem;
-		width:10%;
+		width: 10%;
 	}
 	td.total {
 		text-align: right;
