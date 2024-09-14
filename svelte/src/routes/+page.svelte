@@ -3,27 +3,50 @@
 </script>
 
 <!--- the tables are controllable by passing them an array of the groupin_lists you want to display-->
-<div class="flex flex-col gap-4 container mx-auto mt-4">
+<div class="container">
+	<div class="primaryTable">
+		<LiquidTables groupingLevels={[0, 4]} />
+	</div>
 
-<div class="flex flex-row">
-<div class=" h-[50vh]  overflow-auto border-gray-200 border ">
-     <LiquidTables groupingLevels={[0,4]} />
-</div>
+	<div class="subTables">
+		<div class="small-table-container">
+			<LiquidTables groupingLevels={[0, 1]} />
+		</div>
+		<div class="small-table-container">
+			<LiquidTables groupingLevels={[0, 2]} />
+		</div>
+		<div class="small-table-container">
+			<LiquidTables groupingLevels={[0, 3]} />
+		</div>
+	</div>
 </div>
 
-<div class="">
-<div class="flex flex-row gap-4">
-	
-	<div class="w-1/3 h-[34vh] overflow-auto border border-gray-200">
-		<LiquidTables groupingLevels={[0, 1]} />
-	</div>
-	<div class="w-1/3  h-[34vh] overflow-auto border border-gray-200 ">
-		<LiquidTables groupingLevels={[0, 2]} />
-	</div>
-	<div class="w-1/3 h-[34vh] overflow-auto border border-gray-200">
-		<LiquidTables groupingLevels={[0, 3]} />
-	</div>
-	
-</div>
-</div>
-</div>
+<style>
+	.container {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	.primaryTable {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		margin-top: 1rem;
+		max-height: 50vh;
+		overflow: auto;
+		border: 1px solid #e2e8f0;
+	}
+	.subTables {
+		display: flex;
+		flex-direction: row;
+		gap: 1rem;
+	}
+	.subTables > div {
+		width: 33.3333%;
+		height: 34vh;
+		overflow: auto;
+		border: 1px solid #e2e8f0;
+	}
+</style>
