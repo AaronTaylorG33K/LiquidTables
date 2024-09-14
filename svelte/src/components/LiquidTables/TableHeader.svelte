@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Selectable from './ColumnFilter.svelte';
-	export let columns: string[] = [];
+	import { writable } from 'svelte/store';
+	export let columns = writable<string[]>([]);
 	export let filterByColumn: string = '';
 </script>
 

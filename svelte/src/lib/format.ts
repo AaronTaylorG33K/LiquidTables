@@ -1,54 +1,48 @@
-import type { Metrics } from '../types/metrics';
-
+import type { Metrics, MetricTuple } from '../types/metrics';
 
 export function sanitize(str: string): string {
-    if (typeof str !== 'string') {
-        return '';
-    }
-    return str.replace(/ /g, '+').toLowerCase().replace('_id', '');
+	
+	return str.replace(/ /g, '+').toLowerCase().replace('_id', '');
 }
 
-export function reString(str: string): string {
-    return str.replace(/\+/g, ' ');
-    
-}
 export function formatMoney(value: number): string {
-    const formatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-    });
+	const formatter = new Intl.NumberFormat('en-US', {
+		style: 'currency',
+		currency: 'USD',
+		minimumFractionDigits: 2,
+		maximumFractionDigits: 2
+	});
 
-    return formatter.format(value);
+	return formatter.format(value);
 }
 
-export function formatData(metrics: (Partial<Metrics> | [string, string, string, number, number, number, number, string, number])[]): Metrics[] {
-    if (Array.isArray(metrics)) {
-        return metrics.map(
-            (metric: Partial<Metrics> | [string, string, string, number, number, number, number, string, number]) => {
-                if (Array.isArray(metric)) {
-                    return {
-                        invoice_id: metric[3],
-                        product: metric[0],
-                        customer: metric[1],
-                        salesperson: metric[2],
-                        customer_id: metric[4],
-                        salesperson_id: metric[5],
-                        quantity: metric[6],
-                        total: parseFloat(metric[7]), // Convert amount to number
-                        groupingLevel: metric[8]
-                    };
-                } else {
-                    return {
-                        ...metric,
-                        amount: metric.amount ? parseFloat(metric.amount as unknown as string) : 0 // Ensure amount is a number
-                    } as Metrics;
-                }
-            }
-        );
-    } else {
-        console.error('metrics is not an array:', metrics);
-        return [];
-    }
+export function formatData(metrics: (Partial<Metrics> | MetricTuple)[]): Metrics[] {
+	return metrics.map((metric: Partial<Metrics> | MetricTuple) => {
+		if (Array.isArray(metric)) {
+			const [
+				product,
+				customer,
+				salesperson,
+				invoice_id,
+				customer_id,
+				salesperson_id,
+				quantity,
+				total,
+				groupingLevel
+			] = metric;
+			return {
+				product,
+				customer,
+				salesperson,
+				invoice_id,
+				customer_id,
+				salesperson_id,
+				quantity,
+				total,
+				groupingLevel
+			} as Metrics;
+		} else {
+			return metric as Metrics;
+		}
+	});
 }

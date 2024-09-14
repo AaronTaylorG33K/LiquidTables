@@ -6,8 +6,8 @@
 	import { metricsStore } from '../store/metrics';
 	import { filterData } from '../lib/filtering';
 	import { formatData } from '../lib/format';
-	import TableHeader from './sheet/TableHeader.svelte';
-	import TableBody from './sheet/TableBody.svelte';
+	import TableHeader from './LiquidTables/TableHeader.svelte';
+	import TableBody from './LiquidTables/TableBody.svelte';
 	import type { Metrics } from '../types/metrics';
 
 	export const filteredData = writable<Metrics[]>([]);
