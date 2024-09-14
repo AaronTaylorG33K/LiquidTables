@@ -91,6 +91,7 @@
 
 	tr:hover {
 		background-color: #dfefff50;
+		transition: all 0.2s;
 	}
 
 	tr:last-child:hover {

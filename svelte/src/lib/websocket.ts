@@ -1,15 +1,12 @@
 import { writable, type Writable } from 'svelte/store';
-import { data } from './filtering';
 import { metricsStore } from '../store/metrics';
 import type { Metrics } from '../types/metrics';
-import { formatData } from './format';
 
 let ws: WebSocket | null = null;
 const retryInterval = 10000; // 10 seconds
 const status: Writable<string> = writable('disconnected');
 
 const websocketStore = writable<WebSocket | null>(null);
-
 
 function initializeWebSocket() {
 	ws = new WebSocket('ws://localhost:8000/ws');
@@ -25,8 +22,7 @@ function initializeWebSocket() {
 			const response: { data: Partial<Metrics> } = JSON.parse(event.data);
 			try {
 				const data = response.data;
-				//TODO: debug typescript issue
-				metricsStore.set(data);
+				metricsStore.set(data as Metrics[]);
 			} catch (error) {
 				console.error('Error updating local store:', error);
 			}
@@ -84,8 +80,6 @@ export function closeWebSocket() {
 export function getConnectionStatus() {
 	return status;
 }
-
-
 
 initializeWebSocket();
 
