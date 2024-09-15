@@ -12,7 +12,7 @@
 
 	export const columns = writable<string[]>([]);
 	export let groupingLevels: number[] = [];
-	export let filterByColumn: string = '';
+	export let filterByColumn: keyof Metrics | undefined = undefined;
 	export let filterByColumnValue: string = '';
 
 	let hideColumns = ['customer_id', 'salesperson_id'];
@@ -37,14 +37,15 @@
 				let column_keys = getColumns(filtered);
 				column_keys = getColumns(filtered).filter((key) => !hideColumns.includes(key));
 				columns.set(column_keys);
+
 			} else {
 				console.error('metrics is not an array:', metrics);
 			}
 
-			filteredData.update((data) => {
+			filteredData.update((data: Metrics[]) => {
 				if (data.length > 0) {
 					const firstRow = data.shift();
-					data.push(firstRow);
+					data.push(firstRow as Metrics);
 				}
 				return data;
 			});
@@ -55,9 +56,7 @@
 		// I'm using the page routing to filter the data
 		// This makes easy to navigate nested levels of data
 		const { params } = $page;
-		const filterByColumn = params.column as keyof Metrics;
-		const filterByColumnValue = params.column_value;
-		applyFilter(filterByColumn, filterByColumnValue);
+		applyFilter();
 	}
 </script>
 
