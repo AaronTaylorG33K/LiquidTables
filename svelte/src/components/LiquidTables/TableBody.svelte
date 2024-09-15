@@ -24,7 +24,7 @@
 					)
 				)
 			: -1}
-		{@const tempRow = level === 10}
+
 		<tr>
 			{#each $columns as column}
 				{@const columnValue = row[column]}
@@ -43,9 +43,7 @@
 					class:font-light={!isLastRow || !isSelected}
 					class:selected={isSelected && !isLastRow}
 				>
-					{#if tempRow}
-					<div class="p-4"></div>
-					{:else}
+					
 				
 						{#if column === 'quantity' && level === 4}
 							<NumberInput value={quantity} id={invoice_id} />
@@ -56,7 +54,7 @@
 						{:else if isDataRow && !isLastRow}
 							<a href={`/${column}/${sanitize(columnValue ?? '')}`}>{columnValue ?? ''}</a>
 						{/if}
-					{/if}
+					
 
 				</td>
 			{/each}
@@ -119,21 +117,26 @@
 
 	td.invoice_id {
 		text-align: center;
+		padding: 0.75rem;
 	}
 	td.product {
 		text-align: left;
 		width: 40vw;
+		padding: 0.75rem;
 	}
 	td.quantity {
 		text-align: center;
-		padding: 0.5rem;
+		padding: 0rem;
 		width: 10%;
+		height: 2rem;
+		padding-bottom:2px;
 	}
 	td.total {
 		text-align: right;
 		white-space: nowrap;
 		border-right: 1px;
-		width:10%;
+		width:15%;
+		padding: 0.75rem;
 		
 	}
 	td.customer,

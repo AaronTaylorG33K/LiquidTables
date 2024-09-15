@@ -13,7 +13,7 @@
 
 <!--- tailwind example -->
 <input
-    class="w-full px-4 py-2 border shadow-sm rounded-md border-gray-300 placeholder-gray-400 text-gray-700 
+    class="w-full h-full pl-4 text-center  placeholder-gray-400 text-gray-700 
     focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none "
     type="number"
     placeholder="1"
