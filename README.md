@@ -7,7 +7,7 @@ LiquidTables is a project that combines Svelte, FastAPI over WebSockets and Duck
 
 ## Prerequesites
 
-Docker, K8s & Make - install it! 
+Docker, K8s, Kubectl & Make - install it! 
 
 
 ## How to Use LiquidTables
