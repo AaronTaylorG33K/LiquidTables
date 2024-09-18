@@ -1,6 +1,6 @@
 # LiquidTables
 
-LiquidTables is a project that combines FastAPI, Svelte, and DuckDB for fast and efficient data handling.
+LiquidTables is a project that combines Svelte, FastAPI over WebSockets and DuckDB for fast and efficient data handling.
 
 <img width="1680" alt="Screenshot 2024-09-14 at 12 50 46 PM" src="https://github.com/user-attachments/assets/8a1199da-ffa1-4ee7-99c3-532296ebff93">
 
